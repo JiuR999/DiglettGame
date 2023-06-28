@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+            <item >
+                  <shape>
+                      <solid android:color="#DBDBDB"/>
+                      <corners android:radius="8dp"/>
+                  </shape>
+            </item>
+
+            <item >
+                <clip android:clipOrientation="horizontal">
+                    <shape>
+                        <solid android:color="@color/btn"/>
+                        <corners android:radius="8dp"/>
+                    </shape>
+                </clip>
+            </item>
+</layer-list>

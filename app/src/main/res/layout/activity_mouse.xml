@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bc_mouse"
+    android:padding="10dp"
+    tools:context=".MouseActivity">
+
+    <TextView
+        android:id="@+id/tv_count"
+        android:layout_width="100dp"
+        android:layout_height="80dp"
+        android:layout_centerHorizontal="true"
+        android:text="分数:X分"
+        android:textColor="@color/orange"
+        android:textSize="25sp" />
+
+    <ProgressBar
+        android:id="@+id/pgb_time"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="120dp"
+        android:layout_height="20dp"
+        android:layout_below="@id/tv_count"
+        android:layout_marginLeft="50dp"
+        android:layout_toRightOf="@id/ib_list"
+        android:max="120"
+        android:progressDrawable="@drawable/nprogress" />
+    <ImageButton
+        android:id="@+id/ib_list"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginBottom="70dp"
+        android:background="@null"
+        android:src="@mipmap/list" />
+
+    <ImageButton
+        android:id="@+id/ib_music"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:background="@null"
+        android:paddingRight="8dp"
+        android:src="@mipmap/music_on" />
+    <ImageView
+        android:id="@+id/iv_mouse"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:src="@drawable/dishu"
+        android:visibility="invisible"/>
+
+    <ImageView
+        android:id="@+id/iv_chuizi"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:src="@drawable/chuizi"
+        android:visibility="invisible" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/ib_play"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="70dp"
+            android:background="@null"
+            android:src="@mipmap/btn_start" />
+
+        <ImageButton
+            android:id="@+id/ib_end"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="70dp"
+            android:layout_toRightOf="@id/ib_play"
+            android:background="@null"
+            android:src="@mipmap/btn_end" />
+    </LinearLayout>
+</RelativeLayout>
