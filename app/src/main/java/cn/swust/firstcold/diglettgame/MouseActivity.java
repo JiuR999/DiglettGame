@@ -249,7 +249,7 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
         switch (event.getAction()){
             case MotionEvent.ACTION_DOWN:
                 imageViewChui.setX(event.getRawX()-imageViewChui.getWidth()/2);
-                imageViewChui.setY(event.getRawY()-imageViewChui.getHeight());
+                imageViewChui.setY(event.getRawY()-imageViewChui.getHeight()/2);
                 imageViewChui.setVisibility(View.VISIBLE);
                 break;
             case MotionEvent.ACTION_UP:
