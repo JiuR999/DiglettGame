@@ -9,11 +9,13 @@ import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextPaint;
+import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private Button btnGame;
@@ -29,6 +31,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnGame = findViewById(R.id.btn_game);
         btnGame.setOnClickListener(this);
         tvRegister = findViewById(R.id.tv_register);
+        tvRegister.setMovementMethod(LinkMovementMethod.getInstance());
         tvRegister.setText(getClickableSpan());
     }
 
@@ -46,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ClickableSpan clickableSpan = new ClickableSpan() {
             @Override
             public void onClick(@NonNull View widget) {
-
+                   startActivity(new Intent(MainActivity.this,RegisterActivity.class));
             }
             //重写该方法去掉下划线
             @Override

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#F3F3F3"
+    tools:context=".RegisterActivity"
+    android:gravity="center_vertical">
+    <EditText
+        android:layout_width="280dp"
+        android:layout_height="50dp"
+        android:gravity="center_horizontal"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/edit"
+        android:hint="请输入用户名"/>
+    <EditText
+        android:layout_width="280dp"
+        android:layout_height="50dp"
+        android:gravity="center_horizontal"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/edit"
+        android:hint="请输入密码"/>
+</LinearLayout>
