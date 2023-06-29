@@ -62,6 +62,7 @@ public class RegisterActivity extends AppCompatActivity {
     private void insertUser(User user) {
         new Thread(new Runnable() {
             @Override
+
             public void run() {
                 db = UserDataBase.getInstance(RegisterActivity.this);
                 userDao = db.userDao();
@@ -80,7 +81,6 @@ public class RegisterActivity extends AppCompatActivity {
     }
     /**
      * 字符串是否包含中文
-     *
      * @param str 待校验字符串
      * @return true 包含中文字符  false 不包含中文字符
      */
