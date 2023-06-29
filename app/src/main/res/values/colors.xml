@@ -11,4 +11,6 @@
     <color name="orange">#FFA500</color><!--橙色 -->
     <color name="blue">#197CED</color>  <!--天蓝色-->
     <color name="btn">#99CC33</color>
+    <color name="actionbar">#73C5F4</color>
+    <color name="lblue">#21E5FF</color>
 </resources>

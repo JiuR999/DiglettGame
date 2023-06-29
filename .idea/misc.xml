@@ -5,6 +5,8 @@
       <map>
         <entry key="..\:/DiglettGame/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.2265" />
         <entry key="..\:/DiglettGame/app/src/main/res/drawable/btn.xml" value="0.1365" />
+        <entry key="..\:/DiglettGame/app/src/main/res/drawable/checkbox.xml" value="0.134" />
+        <entry key="..\:/DiglettGame/app/src/main/res/drawable/circle.xml" value="0.134" />
         <entry key="..\:/DiglettGame/app/src/main/res/drawable/circle_image.xml" value="0.2265" />
         <entry key="..\:/DiglettGame/app/src/main/res/drawable/edit.xml" value="0.2265" />
         <entry key="..\:/DiglettGame/app/src/main/res/drawable/ic_launcher_background.xml" value="0.2265" />
@@ -13,6 +15,7 @@
         <entry key="..\:/DiglettGame/app/src/main/res/layout/activity_main.xml" value="0.2" />
         <entry key="..\:/DiglettGame/app/src/main/res/layout/activity_mouse.xml" value="0.2" />
         <entry key="..\:/DiglettGame/app/src/main/res/layout/activity_register.xml" value="0.12604166666666666" />
+        <entry key="..\:/DiglettGame/app/src/main/res/layout/dialog.xml" value="0.11875" />
       </map>
     </option>
   </component>

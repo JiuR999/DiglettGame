@@ -2,8 +2,8 @@
     <!-- Base application theme. -->
     <style name="Theme.DiglettGame" parent="Theme.AppCompat.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">#21E5FF</item>
-        <item name="colorPrimaryVariant">#21E5FF</item>
+        <item name="colorPrimary">@color/actionbar</item>
+        <item name="colorPrimaryVariant">@color/actionbar</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
@@ -12,5 +12,11 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+    </style>
+    <style name="CustomTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowTitleBackgroundStyle">@style/CustomWindowTitleBackground</item>
+    </style>
+    <style name="CustomWindowTitleBackground" parent="android:Widget.Material.ActionBar.Solid">
+        <item name="android:background">#FF0000</item> <!-- 设置标题栏的颜色为红色 -->
     </style>
 </resources>
