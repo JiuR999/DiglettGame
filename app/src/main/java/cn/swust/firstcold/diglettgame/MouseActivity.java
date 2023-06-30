@@ -23,8 +23,6 @@ import java.util.Random;
 
 
 public class MouseActivity extends AppCompatActivity implements View.OnClickListener {
-    
-    //测试更新
     //锤子和地鼠控件
     private ImageView imageViewMouse,imageViewChui;
     //设置游戏音乐关闭、开始或者暂停游戏、排行榜、结束游戏
