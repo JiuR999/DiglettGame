@@ -1,6 +1,8 @@
 package cn.swust.firstcold.diglettgame;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
@@ -27,7 +29,7 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
     private ImageView imageViewMouse,imageViewChui;
     //设置游戏音乐关闭、开始或者暂停游戏、排行榜、结束游戏、返回
     private ImageButton imageBtnMusic,imageBtnPlay,imageBtnList,imageBtnEnd,imageButtonBack;
-    private TextView tv_count;
+    private TextView tv_count,tv_curtime;
     //标志连击
     private int lcount = 0;
 
@@ -73,7 +75,7 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
 
     private final int PROGRESS = 3;
      //简单模式时间限制
-    private int time_limit = 120;
+    private int time_limit = 10;
     //简单模式刷新时间
     private int time_renew = 900;
     //记录用户目前游戏得分
@@ -93,8 +95,22 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
             }else if (msg.what==TIME){
                   time_limit = msg.arg1;
                   progressBarTime.setProgress(msg.arg1);
+                  tv_curtime.setText(""+msg.arg1+"秒");
+                  //进度条结束
                   if (msg.arg1==0){
-
+                      new AlertDialog.Builder(MouseActivity.this).setMessage("您的得分是"+grade)
+                              .setTitle("时间到！").setPositiveButton("下一关", new DialogInterface.OnClickListener() {
+                          @Override
+                          public void onClick(DialogInterface dialog, int which) {
+                              dialog.dismiss();
+                          }
+                      }).setNegativeButton("返回", new DialogInterface.OnClickListener() {
+                          @Override
+                          public void onClick(DialogInterface dialog, int which) {
+                              dialog.dismiss();
+                          }
+                      })
+                              .show();
                   }
             }
         }
@@ -178,6 +194,7 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
      */
     private void initView() {
         initPosition();
+        tv_curtime = findViewById(R.id.tv_curtime);
         intentSound = new Intent(this,BcsoundService.class);
         progressBarTime = findViewById(R.id.pgb_time);
         //绑定图片按钮控件并设计监听事件
