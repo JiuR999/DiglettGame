@@ -15,7 +15,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,8 +25,8 @@ import java.util.Random;
 public class MouseActivity extends AppCompatActivity implements View.OnClickListener {
     //锤子和地鼠控件
     private ImageView imageViewMouse,imageViewChui;
-    //设置游戏音乐关闭、开始或者暂停游戏、排行榜、结束游戏
-    private ImageButton imageBtnMusic,imageBtnPlay,imageBtnList,imageBtnEnd;
+    //设置游戏音乐关闭、开始或者暂停游戏、排行榜、结束游戏、返回
+    private ImageButton imageBtnMusic,imageBtnPlay,imageBtnList,imageBtnEnd,imageButtonBack;
     private TextView tv_count;
     //标志连击
     private int lcount = 0;
@@ -92,7 +91,11 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
                 imageViewMouse.setY(position[msg.arg1][1]);
                 playSound(ACTION_PLAY_SHU);
             }else if (msg.what==TIME){
+                  time_limit = msg.arg1;
                   progressBarTime.setProgress(msg.arg1);
+                  if (msg.arg1==0){
+
+                  }
             }
         }
     };
@@ -110,7 +113,6 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
     private void initLevel() {
         level = Integer.valueOf(getIntent().getStringExtra(LevelSelectionActivity.LEVEL))+1;
         account = getIntent().getStringExtra(MainActivity.ACCOUNT);
-        Toast.makeText(this, "关卡："+level+"账户："+account, Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -128,11 +130,11 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
         @Override
         public void run() {
             super.run();
-            while (!Thread.currentThread().isInterrupted()&&isGameStart){
+            while (!Thread.currentThread().isInterrupted()&&isGameStart&&this.time_limit>=0){
                    this.time_limit--;
                    Message msg = new Message();
                    msg.what = TIME;
-                   msg.arg1 = time_limit;
+                   msg.arg1 = this.time_limit;
                    handler.sendMessage(msg);
                 try {
                     Thread.sleep(1000);
@@ -183,24 +185,28 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
 
         imageViewMouse = findViewById(R.id.iv_mouse);
         imageViewChui = findViewById(R.id.iv_chuizi);
-
+        imageButtonBack = findViewById(R.id.ib_return);
+        imageButtonBack.setOnClickListener(this);
         imageBtnMusic = findViewById(R.id.ib_music);
         imageBtnMusic.setOnClickListener(this);
         imageBtnPlay = findViewById(R.id.ib_play);
         imageBtnPlay.setOnClickListener(this);
         //排行榜
         imageBtnList = findViewById(R.id.ib_list);
-
+        imageBtnList.setOnClickListener(this);
         imageBtnEnd = findViewById(R.id.ib_end);
         imageBtnEnd.setOnClickListener(this);
+
         tv_count = findViewById(R.id.tv_count);
+        //设置字体
         AssetManager assetManager = this.getAssets();
+
         tv_count.setTypeface(Typeface.createFromAsset(assetManager,"fonts/FZYTK.TTF"));
         //设置用户点击老鼠后的响应事件
         imageViewMouse.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction()==MotionEvent.ACTION_DOWN){
+                if (event.getAction()==MotionEvent.ACTION_DOWN&&isGameStart){
                     grade++;
                     isContinue[lcount] = 1;
                     if(lcount==0){
@@ -292,6 +298,21 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
         return super.onTouchEvent(event);
     }
 
+    /**
+     * 播放音乐
+     */
+    private void startPlayBacMusic() {
+        Intent intent = new Intent(MouseActivity.this,BcmusicService.class);
+        startService(intent);
+    }
+    /**
+     * 停止播放音乐
+     */
+    private void stopPlayBacMusic() {
+        Intent intent = new Intent(MouseActivity.this,BcmusicService.class);
+        stopService(intent);
+    }
+
     //ImageButton的点击事件
     @Override
     public void onClick(View v) {
@@ -304,43 +325,43 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
                 }else{
                     imageBtnPlay.setImageResource(R.mipmap.btn_pause);
                     isGameStart = true;
+                    progressBarTime.setVisibility(View.VISIBLE);
                     // 开启一个线程用于游戏倒计时线程对象  默认为简单模式
                     countTimeThread = new CountTimeThread(time_limit);
                     //创建更新地鼠位置线程对象 默认模式为简单
                     reNewDiglett = new ReNewDiglettThread(time_renew);
                     reNewDiglett.start();
                     countTimeThread.start();
-
-                    loadConfig(level);//先读取一次排行榜中已经存储的内容，即使不进行游戏也可以点击排行榜观看已存储的数据
-
-                    imageBtnList.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            saveConfig(level);  //若没进行游戏，则显示历史保存的记录。若进行了游戏，则保存最新游戏的记录
-                            loadConfig(level);  //显示最新记录
-                            startActivity(new Intent(MouseActivity.this, rankingListActivity.class));
-                            //跳转到排行榜页面
-                        }
-                    });
-                    
                 }
                 break;
             case R.id.ib_music:
                 if(isMusicStart){
-                    imageBtnMusic.setImageResource(R.mipmap.music_on);
-                    isMusicStart = false;
-                }else{
                     imageBtnMusic.setImageResource(R.mipmap.music_off);
+                    isMusicStart = false;
+                    stopPlayBacMusic();
+                }else{
+                    imageBtnMusic.setImageResource(R.mipmap.music_on);
                     isMusicStart  =true;
+                    startPlayBacMusic();
                 }
                 break;
             case R.id.ib_end:
                 isGameStart = false;
                 imageBtnPlay.setImageResource(R.mipmap.btn_start);
+                loadConfig(level);//先读取一次排行榜中已经存储的内容，即使不进行游戏也可以点击排行榜观看已存储的数据
+                saveConfig(level);  //若没进行游戏，则显示历史保存的记录。若进行了游戏，则保存最新游戏的记录
                 COMBO = 0;
                 grade = 0;
                 stopService(intentSound);
-
+                break;
+            case R.id.ib_list:
+                loadConfig(level);//先读取一次排行榜中已经存储的内容
+                saveConfig(level);  //若没进行游戏，则显示历史保存的记录。若进行了游戏，则保存最新游戏的记录
+                startActivity(new Intent(MouseActivity.this, rankingListActivity.class));
+                break;
+            case R.id.ib_return:
+                finish();
+                break;
         }
     }
 
@@ -351,43 +372,43 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
         SharedPreferences.Editor editor = sp.edit();
         switch (i)
         {
-            case 1: maxCount = Math.max(lcount,Integer.parseInt(recordCount));
+            case 1: maxCount = Math.max(grade,Integer.parseInt(recordCount));
                 editor.putString(SCORE1,String.valueOf(maxCount));
                 editor.apply();
                 break;
-            case 2: maxCount = Math.max(lcount,Integer.parseInt(recordCount));
+            case 2: maxCount = Math.max(grade,Integer.parseInt(recordCount));
                 editor.putString(SCORE2,String.valueOf(maxCount));
                 editor.apply();
                 break;
-            case 3: maxCount = Math.max(lcount,Integer.parseInt(recordCount));
+            case 3: maxCount = Math.max(grade,Integer.parseInt(recordCount));
                 editor.putString(SCORE3,String.valueOf(maxCount));
                 editor.apply();
                 break;
-            case 4: maxCount = Math.max(lcount,Integer.parseInt(recordCount));
+            case 4: maxCount = Math.max(grade,Integer.parseInt(recordCount));
                 editor.putString(SCORE4,String.valueOf(maxCount));
                 editor.apply();
                 break;
-            case 5: maxCount = Math.max(lcount,Integer.parseInt(recordCount));
+            case 5: maxCount = Math.max(grade,Integer.parseInt(recordCount));
                 editor.putString(SCORE5,String.valueOf(maxCount));
                 editor.apply();
                 break;
-            case 6: maxCount = Math.max(lcount,Integer.parseInt(recordCount));
+            case 6: maxCount = Math.max(grade,Integer.parseInt(recordCount));
                 editor.putString(SCORE6,String.valueOf(maxCount));
                 editor.apply();
                 break;
-            case 7: maxCount = Math.max(lcount,Integer.parseInt(recordCount));
+            case 7: maxCount = Math.max(grade,Integer.parseInt(recordCount));
                 editor.putString(SCORE7,String.valueOf(maxCount));
                 editor.apply();
                 break;
-            case 8: maxCount = Math.max(lcount,Integer.parseInt(recordCount));
+            case 8: maxCount = Math.max(grade,Integer.parseInt(recordCount));
                 editor.putString(SCORE8,String.valueOf(maxCount));
                 editor.apply();
                 break;
-            case 9: maxCount = Math.max(lcount,Integer.parseInt(recordCount));
+            case 9: maxCount = Math.max(grade,Integer.parseInt(recordCount));
                 editor.putString(SCORE9,String.valueOf(maxCount));
                 editor.apply();
                 break;
-            case 10: maxCount = Math.max(lcount,Integer.parseInt(recordCount));
+            case 10: maxCount = Math.max(grade,Integer.parseInt(recordCount));
                 editor.putString(SCORE10,String.valueOf(maxCount));
                 editor.apply();
                 break;

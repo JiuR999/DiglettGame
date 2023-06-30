@@ -23,9 +23,11 @@
         android:layout_height="20dp"
         android:layout_below="@id/tv_count"
         android:layout_marginLeft="50dp"
+        android:visibility="invisible"
         android:layout_toRightOf="@id/ib_list"
         android:max="120"
         android:progressDrawable="@drawable/progress" />
+
     <ImageButton
         android:id="@+id/ib_list"
         android:layout_width="80dp"
@@ -82,6 +84,7 @@
             android:layout_toRightOf="@id/ib_play"
             android:background="@null"
             android:src="@mipmap/btn_end" />
+
         <ImageButton
             android:id="@+id/ib_return"
             android:layout_width="80dp"
