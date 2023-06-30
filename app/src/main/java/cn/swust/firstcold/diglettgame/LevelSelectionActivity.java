@@ -44,7 +44,7 @@ public class LevelSelectionActivity extends AppCompatActivity {
      */
     private void startPlayBacMusic() {
         Intent intent = new Intent(LevelSelectionActivity.this,BcmusicService.class);
-        startService(intent);
+        //startService(intent);
     }
 
     private void initRecycleView() {

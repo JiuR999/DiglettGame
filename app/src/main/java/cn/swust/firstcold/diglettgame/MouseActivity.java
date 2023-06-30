@@ -14,6 +14,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,10 +25,9 @@ import java.util.Random;
 public class MouseActivity extends AppCompatActivity implements View.OnClickListener {
     //锤子和地鼠控件
     private ImageView imageViewMouse,imageViewChui;
-    //记录分数
-    private TextView count;
     //设置游戏音乐关闭、开始或者暂停游戏、排行榜、结束游戏
     private ImageButton imageBtnMusic,imageBtnPlay,imageBtnList,imageBtnEnd;
+    private TextView tv_count;
     //标志连击
     private int lcount = 0;
     //计时线程
@@ -45,6 +45,8 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
     private int[] isContinue = {0,0,0,0,0};
     //记录连击数量
     private int COMBO = 0;
+    private Intent intentSound ;
+    //private final Intent intentMusic = new Intent(MouseActivity.this, BcmusicService.class);
     private final int MAX_CLICK = 5;
     //传递地鼠位置消息类型
     private final int MOUSE_POZITION = 1;
@@ -66,11 +68,10 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
         public void handleMessage(@NonNull Message msg) {
             super.handleMessage(msg);
             if (msg.what == MOUSE_POZITION){
-                playSound(ACTION_PLAY_SHU);
                 imageViewMouse.setVisibility(View.VISIBLE);
                 imageViewMouse.setX(position[msg.arg1][0]);
                 imageViewMouse.setY(position[msg.arg1][1]);
-                //count.setText("连击"+msg.arg2+"次");
+                playSound(ACTION_PLAY_SHU);
             }else if (msg.what==TIME){
                   progressBarTime.setProgress(msg.arg1);
             }
@@ -89,6 +90,8 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
 
     private void initLevel() {
         CurrentNum = Integer.valueOf(getIntent().getStringExtra(LevelSelectionActivity.LEVEL))+1;
+        account = getIntent().getStringExtra(MainActivity.ACCOUNT);
+        Toast.makeText(this, "关卡："+CurrentNum+"账户："+account, Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -154,6 +157,7 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
      */
     private void initView() {
         initPosition();
+        intentSound = new Intent(this,BcsoundService.class);
         progressBarTime = findViewById(R.id.pgb_time);
         //绑定图片按钮控件并设计监听事件
         progressBarTime.setMax(time_limit);
@@ -165,30 +169,33 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
         imageBtnMusic.setOnClickListener(this);
         imageBtnPlay = findViewById(R.id.ib_play);
         imageBtnPlay.setOnClickListener(this);
+        //排行榜
         imageBtnList = findViewById(R.id.ib_list);
         imageBtnList.setOnClickListener(this);
         imageBtnEnd = findViewById(R.id.ib_end);
         imageBtnEnd.setOnClickListener(this);
-        count = findViewById(R.id.tv_count);
+        tv_count = findViewById(R.id.tv_count);
         AssetManager assetManager = this.getAssets();
-        count.setTypeface(Typeface.createFromAsset(assetManager,"fonts/FZYTK.TTF"));
+        tv_count.setTypeface(Typeface.createFromAsset(assetManager,"fonts/FZYTK.TTF"));
         //设置用户点击老鼠后的响应事件
         imageViewMouse.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction()==MotionEvent.ACTION_DOWN){
-
+                    grade++;
                     isContinue[lcount] = 1;
                     if(lcount==0){
                         if(isContinue[MAX_CLICK-1]==1){
                             COMBO++;
                         }else{
+                            grade+=COMBO*2;
                             COMBO = 0;
                         }
                     }else{
                         if(isContinue[(lcount-1)%5]==1){
                             COMBO++;
                         }else{
+                            grade+=COMBO*2;
                             COMBO = 0;
                         }
                     }
@@ -197,7 +204,8 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
                     imageViewChui.setY(event.getRawY()-imageViewChui.getHeight()-70);
                     imageViewChui.setVisibility(View.VISIBLE);
                     playSound(ACTION_PLAY_CHUI);
-                    count.setText("COMB x" + COMBO);
+                    tv_count.setText("分数: "+grade);
+                    //tv_count.setText("COMB x" + COMBO);
                 }
                 //用户抬起手后，将锤子设置为不可见
                 else if(event.getAction()==MotionEvent.ACTION_UP) {
@@ -213,9 +221,8 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
      * @param action 播放音效类型
      */
     protected void playSound(int action){
-        Intent intent = new Intent(MouseActivity.this, BcsoundService.class);
-        intent.putExtra("打地鼠界面",action);
-        startService(intent);
+        intentSound.putExtra("打地鼠界面",action);
+        startService(intentSound);
     }
 
     //获取状态栏高度
@@ -256,7 +263,7 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
         switch (event.getAction()){
             case MotionEvent.ACTION_DOWN:
                 imageViewChui.setX(event.getRawX()-imageViewChui.getWidth()/2);
-                imageViewChui.setY(event.getRawY()-imageViewChui.getHeight()/2);
+                imageViewChui.setY(event.getRawY()-imageViewChui.getHeight()/3);
                 imageViewChui.setVisibility(View.VISIBLE);
                 break;
             case MotionEvent.ACTION_UP:

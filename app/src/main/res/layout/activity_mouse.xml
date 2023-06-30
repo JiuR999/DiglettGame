@@ -26,7 +26,7 @@
         android:layout_marginLeft="50dp"
         android:layout_toRightOf="@id/ib_list"
         android:max="120"
-        android:progressDrawable="@drawable/nprogress" />
+        android:progressDrawable="@drawable/progress" />
     <ImageButton
         android:id="@+id/ib_list"
         android:layout_width="80dp"
