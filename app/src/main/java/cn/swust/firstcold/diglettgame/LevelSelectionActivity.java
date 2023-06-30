@@ -26,6 +26,8 @@ public class LevelSelectionActivity extends AppCompatActivity {
     private List<Level> levels;
     private ImageView imgReturn;
     private String account;
+    private ImageView imgMusic;
+    private boolean isPlay = true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,10 +46,19 @@ public class LevelSelectionActivity extends AppCompatActivity {
      */
     private void startPlayBacMusic() {
         Intent intent = new Intent(LevelSelectionActivity.this,BcmusicService.class);
-        //startService(intent);
+        startService(intent);
+    }
+    /**
+     * 停止播放音乐
+     */
+    private void stopPlayBacMusic() {
+        Intent intent = new Intent(LevelSelectionActivity.this,BcmusicService.class);
+        stopService(intent);
     }
 
     private void initRecycleView() {
+        imgMusic = findViewById(R.id.imgMusic);
+
         // 设置布局管理器为网格布局管理器，每行显示五个关卡
         GridLayoutManager layoutManager = new GridLayoutManager(this, 4);
         recyclerView.setLayoutManager(layoutManager);
@@ -66,7 +77,20 @@ public class LevelSelectionActivity extends AppCompatActivity {
             }
         });
         recyclerView.setAdapter(adapter);
-
+        imgMusic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(isPlay){
+                    imgMusic.setImageResource(R.mipmap.music_off);
+                    isPlay = false;
+                    stopPlayBacMusic();
+                }else{
+                    imgMusic.setImageResource(R.mipmap.music_on);
+                    isPlay = true;
+                    startPlayBacMusic();
+                }
+            }
+        });
         imgReturn = findViewById(R.id.imgReturn);
         imgReturn.setOnClickListener(new View.OnClickListener() {
             @Override

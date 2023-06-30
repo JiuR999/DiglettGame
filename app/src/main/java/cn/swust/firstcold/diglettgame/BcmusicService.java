@@ -11,7 +11,7 @@ import android.os.IBinder;
 public class BcmusicService extends Service {
     public BcmusicService() {
     }
-    MediaPlayer mediaPlayer;
+    public static MediaPlayer mediaPlayer;
     //记录音乐播放状态
     static boolean isPlayer;
 
@@ -46,7 +46,7 @@ public class BcmusicService extends Service {
         super.onDestroy();
     }
     //关闭音量
-    protected void shutMusic(){
+    public static void shutMusic(){
         mediaPlayer.setVolume(0,0);
     }
 }
