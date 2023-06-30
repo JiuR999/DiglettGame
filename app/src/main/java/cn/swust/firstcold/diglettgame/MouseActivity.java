@@ -98,23 +98,41 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
                   tv_curtime.setText(""+msg.arg1+"秒");
                   //进度条结束
                   if (msg.arg1==0){
+                      isGameStart = false;
                       new AlertDialog.Builder(MouseActivity.this).setMessage("您的得分是"+grade)
                               .setTitle("时间到！").setPositiveButton("下一关", new DialogInterface.OnClickListener() {
                           @Override
                           public void onClick(DialogInterface dialog, int which) {
+                              reSetGame();
                               dialog.dismiss();
                           }
                       }).setNegativeButton("返回", new DialogInterface.OnClickListener() {
                           @Override
                           public void onClick(DialogInterface dialog, int which) {
+                              reSetGame();
                               dialog.dismiss();
                           }
                       })
                               .show();
+
                   }
             }
         }
     };
+
+    /**
+     * 游戏结束后重置
+     */
+    private void reSetGame() {
+        isGameStart = false;
+        time_limit = 10;
+        imageBtnPlay.setImageResource(R.mipmap.btn_start);
+        grade+=COMBO*2;
+        saveConfig(level);
+        grade = 0;
+        COMBO = 0;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
