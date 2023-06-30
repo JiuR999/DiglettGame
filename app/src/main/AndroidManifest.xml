@@ -9,6 +9,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.DiglettGame">
+        <service
+            android:name=".BcsoundService"
+            android:enabled="true"
+            android:exported="true"></service>
+
+        <activity
+            android:name=".LevelSelectionActivity"
+            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="false" />

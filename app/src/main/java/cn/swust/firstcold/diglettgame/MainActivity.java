@@ -28,6 +28,7 @@ import cn.swust.firstcold.roomdatabase.UserDao;
 import cn.swust.firstcold.roomdatabase.UserDataBase;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+    public static final String ACCOUNT = "account";
     private Button btnGame,btnLog;
     private TextView tvRegister;
     private UserDataBase db;
@@ -84,8 +85,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 @Override
                 public void onClick(View v) {
                     dialog.dismiss();
-                    Intent intent = new Intent(MainActivity.this,MouseActivity.class);
-                    intent.putExtra("account",account);
+                    Intent intent = new Intent(MainActivity.this,LevelSelectionActivity.class);
+                    intent.putExtra(ACCOUNT,account);
                     startActivity(intent);
                 }
             });

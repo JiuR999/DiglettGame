@@ -24,6 +24,7 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
             if (msg.arg1==90){
                 imageplay.setVisibility(View.VISIBLE);
                 progressBarRun.setVisibility(View.INVISIBLE);
+
             }
         }
     };

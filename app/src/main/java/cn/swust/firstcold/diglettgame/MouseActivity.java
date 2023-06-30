@@ -1,30 +1,24 @@
 package cn.swust.firstcold.diglettgame;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.Typeface;
-import android.graphics.drawable.AnimationDrawable;
-import android.graphics.fonts.Font;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.Random;
-
-import cn.swust.firstcold.diglettgame.R;
 
 
 public class MouseActivity extends AppCompatActivity implements View.OnClickListener {
@@ -32,21 +26,24 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
     private ImageView imageViewMouse,imageViewChui;
     //记录分数
     private TextView count;
-    //设置游戏音乐关闭、开始或者暂停游戏、结束游戏
+    //设置游戏音乐关闭、开始或者暂停游戏、排行榜、结束游戏
     private ImageButton imageBtnMusic,imageBtnPlay,imageBtnList,imageBtnEnd;
-    //private boolean flag = false;
-    //记录连击
+    //标志连击
     private int lcount = 0;
     //计时线程
     private CountTimeThread countTimeThread;
     //刷新地鼠位置线程
     private ReNewDiglettThread reNewDiglett;
-
+    //当前关卡数
+    private int CurrentNum = 1;
+    //当前账户
+    private String account;
     private ProgressBar progressBarTime;
     private float[][] position;
     private boolean isGameStart = false;
     private boolean isMusicStart = false;
     private int[] isContinue = {0,0,0,0,0};
+    //记录连击数量
     private int COMBO = 0;
     private final int MAX_CLICK = 5;
     //传递地鼠位置消息类型
@@ -56,25 +53,20 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
 
     private final int PROGRESS = 3;
      //简单模式时间限制
-    private int time_limit_simple = 120;
-    //中等模式时间限制
-    private int time_limit_middle = 100;
-    //困难模式时间限制
-    private int time_limit_hard = 80;
+    private int time_limit = 120;
     //简单模式刷新时间
-    private int mode_simple = 900;
-    //中等模式刷新时间
-    private int mode_middle = 700;
-    //困难模式刷新时间
-    private int mode_hard = 500;
+    private int time_renew = 900;
     //记录用户目前游戏得分
     private int grade = 0;
+    private static final int ACTION_PLAY_CHUI = 1;
+    private static final int ACTION_PLAY_SHU = 2;
     //操作UI界面
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(@NonNull Message msg) {
             super.handleMessage(msg);
             if (msg.what == MOUSE_POZITION){
+                playSound(ACTION_PLAY_SHU);
                 imageViewMouse.setVisibility(View.VISIBLE);
                 imageViewMouse.setX(position[msg.arg1][0]);
                 imageViewMouse.setY(position[msg.arg1][1]);
@@ -89,9 +81,14 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mouse);
         initView();
+        initLevel();
 
         //  Toast.makeText(this, "高dp："+heightDp+"\n"+"宽DP"+widthDp, Toast.LENGTH_SHORT).show();
 
+    }
+
+    private void initLevel() {
+        CurrentNum = Integer.valueOf(getIntent().getStringExtra(LevelSelectionActivity.LEVEL))+1;
     }
 
     /**
@@ -158,9 +155,9 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
     private void initView() {
         initPosition();
         progressBarTime = findViewById(R.id.pgb_time);
-
         //绑定图片按钮控件并设计监听事件
-        progressBarTime.setMax(time_limit_simple);
+        progressBarTime.setMax(time_limit);
+
         imageViewMouse = findViewById(R.id.iv_mouse);
         imageViewChui = findViewById(R.id.iv_chuizi);
 
@@ -179,8 +176,8 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
         imageViewMouse.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                //点击地鼠将对应位置刷新地鼠
                 if (event.getAction()==MotionEvent.ACTION_DOWN){
+
                     isContinue[lcount] = 1;
                     if(lcount==0){
                         if(isContinue[MAX_CLICK-1]==1){
@@ -196,10 +193,10 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
                         }
                     }
                     imageViewMouse.setVisibility(View.INVISIBLE);
-
                     imageViewChui.setX(event.getRawX()-imageViewChui.getWidth()/2);
                     imageViewChui.setY(event.getRawY()-imageViewChui.getHeight()-70);
                     imageViewChui.setVisibility(View.VISIBLE);
+                    playSound(ACTION_PLAY_CHUI);
                     count.setText("COMB x" + COMBO);
                 }
                 //用户抬起手后，将锤子设置为不可见
@@ -209,6 +206,16 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
                 return true;
             }
         });
+    }
+
+    /**
+     *
+     * @param action 播放音效类型
+     */
+    protected void playSound(int action){
+        Intent intent = new Intent(MouseActivity.this, BcsoundService.class);
+        intent.putExtra("打地鼠界面",action);
+        startService(intent);
     }
 
     //获取状态栏高度
@@ -271,9 +278,9 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
                     imageBtnPlay.setImageResource(R.mipmap.btn_pause);
                     isGameStart = true;
                     // 开启一个线程用于游戏倒计时线程对象  默认为简单模式
-                    countTimeThread = new CountTimeThread(time_limit_simple);
+                    countTimeThread = new CountTimeThread(time_limit);
                     //创建更新地鼠位置线程对象 默认模式为简单
-                    reNewDiglett = new ReNewDiglettThread(mode_simple);
+                    reNewDiglett = new ReNewDiglettThread(time_renew);
                     reNewDiglett.start();
                     countTimeThread.start();
                     

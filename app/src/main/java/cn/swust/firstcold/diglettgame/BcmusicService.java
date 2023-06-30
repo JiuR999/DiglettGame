@@ -5,6 +5,9 @@ import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.IBinder;
 
+/**
+ * @author 徐玉婷
+ */
 public class BcmusicService extends Service {
     public BcmusicService() {
     }
