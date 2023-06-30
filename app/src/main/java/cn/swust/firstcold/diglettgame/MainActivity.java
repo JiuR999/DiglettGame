@@ -180,7 +180,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //设置文字的点击事件
         spannableString.setSpan(clickableSpan, 6, 11, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
         //设置文字的前景色
-        spannableString.setSpan(new ForegroundColorSpan(Color.BLUE), 6, 11, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        spannableString.setSpan(new ForegroundColorSpan(Color.GREEN), 6, 11, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
         return spannableString;
     }
 

@@ -5,85 +5,94 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#F3F3F3"
+    android:background="@drawable/log_bc"
     tools:context=".MainActivity">
 
-    <ImageView
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="50dp"
-        android:background="@drawable/dishu"
-        android:backgroundTint="@null"
-        android:src="@drawable/circle_image" />
 
-    <EditText
-        android:id="@+id/edit_user"
-        android:layout_width="250dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/edit"
-        android:drawableLeft="@drawable/user"
-        android:layout_gravity="center_horizontal"
-        android:hint="请输入账号" />
+       <ImageView
+           android:layout_width="150dp"
+           android:layout_height="150dp"
+           android:layout_gravity="center_horizontal"
+           android:layout_marginTop="50dp"
+           android:background="@drawable/dishu"
+           android:backgroundTint="@null"
+           android:src="@drawable/circle_image" />
 
-    <EditText
-        android:id="@+id/edit_password"
-        android:layout_width="250dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="20dp"
-        android:hint="请输入密码"
-        android:drawableLeft="@drawable/password"
-        android:background="@drawable/edit"
-        android:layout_gravity="center_horizontal"
-        android:inputType="textPassword"/>
-   <LinearLayout
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-       android:orientation="horizontal">
-       <CheckBox
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:padding="2dp"
-           android:text="记住密码"
-           android:layout_marginTop="5dp"
-           android:layout_marginLeft="80dp"
-           android:buttonTint="@color/btn" />
-       <TextView
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:text="忘记密码"
-           android:layout_marginTop="5dp"
-           android:layout_marginLeft="80dp"/>
-   </LinearLayout>
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="380dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/edit"
+        android:gravity="center_horizontal"
         android:orientation="vertical">
-        <Button
-            android:id="@+id/btn_log"
+        <EditText
+            android:id="@+id/edit_user"
             android:layout_width="250dp"
             android:layout_height="50dp"
-            android:layout_marginTop="30dp"
-            android:text="登录"
-            android:textSize="25sp"
-            android:textStyle="bold"
-            android:textColor="@color/white"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/edit"
+            android:drawableLeft="@drawable/user"
             android:layout_gravity="center_horizontal"
-            android:background="@drawable/btn"/>
+            android:hint="请输入账号" />
 
-        <Button
-            android:id="@+id/btn_game"
+        <EditText
+            android:id="@+id/edit_password"
             android:layout_width="250dp"
-            android:layout_height="55dp"
-            android:layout_marginTop="5dp"
-            android:text="小游戏"
-            android:textSize="25sp"
-            android:textStyle="bold"
-            android:textColor="@color/white"
+            android:layout_height="50dp"
+            android:layout_marginTop="20dp"
+            android:hint="请输入密码"
+            android:drawableLeft="@drawable/password"
+            android:background="@drawable/edit"
             android:layout_gravity="center_horizontal"
-            android:background="@drawable/btn"/>
+            android:inputType="textPassword"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_horizontal">
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="2dp"
+                android:text="记住密码"
+                android:layout_marginTop="5dp"
+                android:buttonTint="@color/btn" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="忘记密码"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="80dp"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="vertical">
+            <Button
+                android:id="@+id/btn_log"
+                android:layout_width="250dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="30dp"
+                android:text="登录"
+                android:textSize="25sp"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/btn"/>
+
+            <Button
+                android:id="@+id/btn_game"
+                android:layout_width="250dp"
+                android:layout_height="55dp"
+                android:layout_marginTop="5dp"
+                android:text="小游戏"
+                android:textSize="25sp"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/btn"/>
+        </LinearLayout>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"

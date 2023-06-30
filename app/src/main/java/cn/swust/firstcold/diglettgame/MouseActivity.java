@@ -27,7 +27,7 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
     private ImageView imageViewMouse,imageViewChui;
     //设置游戏音乐关闭、开始或者暂停游戏、排行榜、结束游戏、返回
     private ImageButton imageBtnMusic,imageBtnPlay,imageBtnList,imageBtnEnd,imageButtonBack;
-    private TextView tv_count;
+    private TextView tv_count,tv_curtime;
     //标志连击
     private int lcount = 0;
 
@@ -93,8 +93,10 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
             }else if (msg.what==TIME){
                   time_limit = msg.arg1;
                   progressBarTime.setProgress(msg.arg1);
+                  tv_curtime.setText(""+msg.arg1+"秒");
                   if (msg.arg1==0){
-
+                      grade +=COMBO*2;
+                      saveConfig(level);
                   }
             }
         }
@@ -178,6 +180,7 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
      */
     private void initView() {
         initPosition();
+        tv_curtime = findViewById(R.id.tv_curtime);
         intentSound = new Intent(this,BcsoundService.class);
         progressBarTime = findViewById(R.id.pgb_time);
         //绑定图片按钮控件并设计监听事件
@@ -229,7 +232,7 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
                     imageViewChui.setY(event.getRawY()-imageViewChui.getHeight()-70);
                     imageViewChui.setVisibility(View.VISIBLE);
                     playSound(ACTION_PLAY_CHUI);
-                    tv_count.setText("分数: "+grade);
+                    tv_count.setText(""+grade+"分");
                     //tv_count.setText("COMB x" + COMBO);
                 }
                 //用户抬起手后，将锤子设置为不可见

@@ -10,9 +10,12 @@
 
     <TextView
         android:id="@+id/tv_count"
-        android:layout_width="100dp"
-        android:layout_height="80dp"
+        android:layout_width="80dp"
+        android:layout_height="60dp"
         android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:text="25分"
+        android:background="@drawable/text"
         android:textColor="@color/orange"
         android:textSize="25sp" />
 
@@ -21,13 +24,26 @@
         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
         android:layout_width="120dp"
         android:layout_height="20dp"
-        android:layout_below="@id/tv_count"
+        android:layout_below="@id/tv_curtime"
         android:layout_marginLeft="50dp"
-        android:visibility="invisible"
+        android:layout_marginTop="8dp"
         android:layout_toRightOf="@id/ib_list"
         android:max="120"
-        android:progressDrawable="@drawable/progress" />
+        android:progressDrawable="@drawable/progress"
+        android:visibility="invisible" />
 
+    <TextView
+        android:id="@+id/tv_curtime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_count"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="15dp"
+        android:drawableLeft="@mipmap/time"
+        android:text="0秒"
+        android:textColor="@color/sandybrown"
+        android:textSize="25sp" />
     <ImageButton
         android:id="@+id/ib_list"
         android:layout_width="80dp"
