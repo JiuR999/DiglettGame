@@ -27,13 +27,13 @@
         android:layout_height="match_parent" >
 
         <ImageView
-            android:id="@+id/imageView2"
+            android:id="@+id/imageReHome"
             android:layout_width="177dp"
             android:layout_height="wrap_content"
             app:srcCompat="@drawable/re2" />
 
         <ImageView
-            android:id="@+id/imageView3"
+            android:id="@+id/imageNext"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:srcCompat="@drawable/next1" />

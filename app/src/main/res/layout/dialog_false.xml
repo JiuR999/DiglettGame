@@ -32,7 +32,7 @@
             app:srcCompat="@drawable/re2" />
 
         <ImageView
-            android:id="@+id/imageView3"
+            android:id="@+id/imageRe"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:srcCompat="@drawable/fa1" />
