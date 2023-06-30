@@ -38,6 +38,9 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
     private static final int TIME_PASS = 4;
     //刷新地鼠位置线程
     private ReNewDiglettThread reNewDiglett;
+    /***
+     * 测试
+     */
     //当前关卡数
     private int level = 1;
     //记录用户目前游戏得分
@@ -352,12 +355,20 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
             btnNext.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //level未同步
+                    //测试用，level未同步
                     level++;
                     dialog.dismiss();
                     Intent intent = getIntent();
                     finish();
                     startActivity(intent);
+                }
+            });
+            //返回菜单
+            btnReHome.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    finish();
+                    dialog.dismiss();
                 }
             });
         }else {
