@@ -44,11 +44,11 @@ public class LevelSelectionActivity extends AppCompatActivity {
      */
     private void startPlayBacMusic() {
         Intent intent = new Intent(LevelSelectionActivity.this,BcmusicService.class);
-        startService(intent);
+        //startService(intent);
     }
 
     private void initRecycleView() {
-        // 设置布局管理器为网格布局管理器，每行显示四个关卡
+        // 设置布局管理器为网格布局管理器，每行显示五个关卡
         GridLayoutManager layoutManager = new GridLayoutManager(this, 4);
         recyclerView.setLayoutManager(layoutManager);
         adapter = new LevelAdapter(levels);

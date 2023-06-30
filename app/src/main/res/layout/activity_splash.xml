@@ -17,7 +17,7 @@
             android:id="@+id/pgb_run"
             style="@style/Widget.AppCompat.ProgressBar.Horizontal"
             android:layout_width="342dp"
-            android:layout_height="13dp"
+            android:layout_height="15dp"
             android:layout_marginStart="32dp"
             android:layout_marginTop="116dp"
             android:max="90"

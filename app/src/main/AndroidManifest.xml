@@ -16,7 +16,7 @@
 
         <activity
             android:name=".LevelSelectionActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".MainActivity"
             android:exported="false" />
