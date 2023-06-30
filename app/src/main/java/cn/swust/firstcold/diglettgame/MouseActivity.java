@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -34,6 +35,7 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
     private int lcount = 0;
     //计时线程
     private CountTimeThread countTimeThread;
+    private static final int TIME_PASS = 4;
     //刷新地鼠位置线程
     private ReNewDiglettThread reNewDiglett;
     //当前关卡数
@@ -43,9 +45,10 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
     //当前游戏速度
     private int speed = 1000-(level -1)*100;
     //当前关卡目标通关分数
-    private int targetScore = 30+(level -1)*5;
+    //private int targetScore = 30+(level -1)*5;
+    private int targetScore = 3;
     //通关状态，默认为false
-    private boolean levelPass = false;
+    private boolean levelPass;
     //当前账户
     private String account;
     private ProgressBar progressBarTime;
@@ -65,7 +68,7 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
 
     private final int PROGRESS = 3;
     //简单模式时间限制
-    private int time_limit = 60;
+    private int time_limit = 10;
     //简单模式刷新时间
     private int time_renew = 900;
     //锤子音效
@@ -87,6 +90,13 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
             }else if (msg.what==TIME){
                 progressBarTime.setProgress(msg.arg1);
             }
+            if(msg.what == TIME_PASS){
+                //当进度条结束之后
+                isGameStart = false;
+                if(grade >= targetScore) levelPass = true;
+                else levelPass = false;
+                levelResult(levelPass);
+            }
         }
     };
     @Override
@@ -97,8 +107,7 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
         initLevel();
 
         //  Toast.makeText(this, "高dp："+heightDp+"\n"+"宽DP"+widthDp, Toast.LENGTH_SHORT).show();
-        //当进度条结束之后
-        if(grade >= targetScore) levelPass = true;
+
 
 
     }
@@ -125,15 +134,19 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
         public void run() {
             super.run();
             while (!Thread.currentThread().isInterrupted()&&isGameStart){
-                this.time_limit--;
                 Message msg = new Message();
-                msg.what = TIME;
-                msg.arg1 = time_limit;
-                handler.sendMessage(msg);
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                if(time_limit<=0){
+                    handler.sendEmptyMessage(TIME_PASS);
+                }else {
+                    this.time_limit--;
+                    msg.what = TIME;
+                    msg.arg1 = time_limit;
+                    handler.sendMessage(msg);
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }
@@ -327,52 +340,55 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
     }
     /**
      * 弹窗事件
-     * */
-    public void levelResult (boolean isPassed){
-        ImageView btnNext = findViewById(R.id.imageNext);
-        ImageView btnReHome = findViewById(R.id.imageReHome);
-        ImageView btnRe = findViewById(R.id.imageRe);
-
+     * */    public void levelResult (boolean isPassed){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater inflater = getLayoutInflater();
-        View dialogView = inflater.inflate(R.layout.dialog_success,null);
-        builder.setView(dialogView);
-        //返回菜单
-        btnReHome.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //返回选择菜单界面
-                finish();
-                dialog.dismiss();
-            }
-        });
+        if(isPassed==true) {
+            View dialogView = inflater.inflate(R.layout.dialog_success, null);
+            builder.setView(dialogView);
+            ImageView btnNext = dialogView.findViewById(R.id.imageNext);
+            ImageView btnReHome = dialogView.findViewById(R.id.imageReHome);
+            //下一关
+            btnNext.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //level未同步
+                    level++;
+                    dialog.dismiss();
+                    Intent intent = getIntent();
+                    finish();
+                    startActivity(intent);
+                }
+            });
+        }else {
+            View dialogView = inflater.inflate(R.layout.dialog_false, null);
+            builder.setView(dialogView);
 
-        //下一关
-        btnNext.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //下一关逻辑
-                level++;
-                dialog.dismiss();
-                Intent intent = getIntent();
-                finish();
-                startActivity(intent);
-            }
-        });
-
-        btnRe.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //重新闯关
-                dialog.dismiss();
-                Intent intent = getIntent();
-                finish();
-                startActivity(intent);
-            }
-        });
-
+            ImageView btnReHome2 = dialogView.findViewById(R.id.imageReHome2);
+            ImageView btnRe = dialogView.findViewById(R.id.imageRe);
+            //重玩本关
+            btnRe.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dialog.dismiss();
+                    Intent intent = getIntent();
+                    finish();
+                    startActivity(intent);
+                }
+            });
+            //返回菜单
+            btnReHome2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    finish();
+                    dialog.dismiss();
+                }
+            });
+        }
         dialog = builder.create();
         dialog.show();
+
     }
+
 
 }
