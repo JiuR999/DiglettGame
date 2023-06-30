@@ -82,5 +82,14 @@
             android:layout_toRightOf="@id/ib_play"
             android:background="@null"
             android:src="@mipmap/btn_end" />
+        <ImageButton
+            android:id="@+id/ib_return"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="70dp"
+            android:layout_toRightOf="@id/ib_end"
+            android:background="@null"
+            android:src="@drawable/ic_fanhui" />
     </LinearLayout>
 </RelativeLayout>
