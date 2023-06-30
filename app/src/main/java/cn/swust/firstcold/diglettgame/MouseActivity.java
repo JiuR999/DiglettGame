@@ -2,6 +2,7 @@ package cn.swust.firstcold.diglettgame;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -30,6 +31,24 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
     private TextView tv_count;
     //标志连击
     private int lcount = 0;
+
+    static String recordCount = "0"; // 用于存储得分
+
+    public static final String CONFIG_NAME = "user_config";
+    public static final int CONFIG_MODE = Context.MODE_PRIVATE;
+
+    //为每个关卡设置一个变量，用于分别用SharedPreferences方法存储各个关卡的最高分
+    public static final String SCORE1 = "user_Score1";
+    public static final String SCORE2 = "user_Score2";
+    public static final String SCORE3 = "user_Score3";
+    public static final String SCORE4 = "user_Score4";
+    public static final String SCORE5 = "user_Score5";
+    public static final String SCORE6 = "user_Score6";
+    public static final String SCORE7 = "user_Score7";
+    public static final String SCORE8 = "user_Score8";
+    public static final String SCORE9 = "user_Score9";
+    public static final String SCORE10 = "user_Score10";
+
     //计时线程
     private CountTimeThread countTimeThread;
     //刷新地鼠位置线程
@@ -171,7 +190,7 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
         imageBtnPlay.setOnClickListener(this);
         //排行榜
         imageBtnList = findViewById(R.id.ib_list);
-        imageBtnList.setOnClickListener(this);
+
         imageBtnEnd = findViewById(R.id.ib_end);
         imageBtnEnd.setOnClickListener(this);
         tv_count = findViewById(R.id.tv_count);
@@ -291,6 +310,18 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
                     reNewDiglett = new ReNewDiglettThread(time_renew);
                     reNewDiglett.start();
                     countTimeThread.start();
+
+                    loadConfig(level);//先读取一次排行榜中已经存储的内容，即使不进行游戏也可以点击排行榜观看已存储的数据
+
+                    imageBtnList.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            saveConfig(level);  //若没进行游戏，则显示历史保存的记录。若进行了游戏，则保存最新游戏的记录
+                            loadConfig(level);  //显示最新记录
+                            startActivity(new Intent(MouseActivity.this, rankingListActivity.class));
+                            //跳转到排行榜页面
+                        }
+                    });
                     
                 }
                 break;
@@ -310,6 +341,84 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
                 grade = 0;
                 stopService(intentSound);
 
+        }
+    }
+
+    protected void saveConfig(int i) //存储第i关的游戏最高分数
+    {
+        int maxCount; //用于存储最新得分和已存储的得分较大的一个
+        SharedPreferences sp = getSharedPreferences(CONFIG_NAME,CONFIG_MODE);
+        SharedPreferences.Editor editor = sp.edit();
+        switch (i)
+        {
+            case 1: maxCount = Math.max(lcount,Integer.parseInt(recordCount));
+                editor.putString(SCORE1,String.valueOf(maxCount));
+                editor.apply();
+                break;
+            case 2: maxCount = Math.max(lcount,Integer.parseInt(recordCount));
+                editor.putString(SCORE2,String.valueOf(maxCount));
+                editor.apply();
+                break;
+            case 3: maxCount = Math.max(lcount,Integer.parseInt(recordCount));
+                editor.putString(SCORE3,String.valueOf(maxCount));
+                editor.apply();
+                break;
+            case 4: maxCount = Math.max(lcount,Integer.parseInt(recordCount));
+                editor.putString(SCORE4,String.valueOf(maxCount));
+                editor.apply();
+                break;
+            case 5: maxCount = Math.max(lcount,Integer.parseInt(recordCount));
+                editor.putString(SCORE5,String.valueOf(maxCount));
+                editor.apply();
+                break;
+            case 6: maxCount = Math.max(lcount,Integer.parseInt(recordCount));
+                editor.putString(SCORE6,String.valueOf(maxCount));
+                editor.apply();
+                break;
+            case 7: maxCount = Math.max(lcount,Integer.parseInt(recordCount));
+                editor.putString(SCORE7,String.valueOf(maxCount));
+                editor.apply();
+                break;
+            case 8: maxCount = Math.max(lcount,Integer.parseInt(recordCount));
+                editor.putString(SCORE8,String.valueOf(maxCount));
+                editor.apply();
+                break;
+            case 9: maxCount = Math.max(lcount,Integer.parseInt(recordCount));
+                editor.putString(SCORE9,String.valueOf(maxCount));
+                editor.apply();
+                break;
+            case 10: maxCount = Math.max(lcount,Integer.parseInt(recordCount));
+                editor.putString(SCORE10,String.valueOf(maxCount));
+                editor.apply();
+                break;
+
+        }
+    }
+    protected void loadConfig(int i) //用于显示第i关的最高分数
+    {
+        SharedPreferences sp = getSharedPreferences(CONFIG_NAME,CONFIG_MODE);
+        switch (i)
+        {
+            case 1: recordCount = sp.getString(SCORE1,"0");
+                break;
+            case 2: recordCount = sp.getString(SCORE2,"0");
+                break;
+            case 3: recordCount = sp.getString(SCORE3,"0");
+                break;
+            case 4: recordCount = sp.getString(SCORE4,"0");
+                break;
+            case 5: recordCount = sp.getString(SCORE5,"0");
+                break;
+            case 6: recordCount = sp.getString(SCORE6,"0");
+                break;
+            case 7: recordCount = sp.getString(SCORE7,"0");
+                break;
+            case 8: recordCount = sp.getString(SCORE8,"0");
+                break;
+            case 9: recordCount = sp.getString(SCORE9,"0");
+                break;
+            case 10: recordCount = sp.getString(SCORE10,"0");
+                break;
         }
     }
 }
