@@ -89,9 +89,9 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void initLevel() {
-        CurrentNum = Integer.valueOf(getIntent().getStringExtra(LevelSelectionActivity.LEVEL))+1;
+        level = Integer.valueOf(getIntent().getStringExtra(LevelSelectionActivity.LEVEL))+1;
         account = getIntent().getStringExtra(MainActivity.ACCOUNT);
-        Toast.makeText(this, "关卡："+CurrentNum+"账户："+account, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "关卡："+level+"账户："+account, Toast.LENGTH_SHORT).show();
     }
 
     /**
