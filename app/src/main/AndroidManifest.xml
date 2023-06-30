@@ -10,6 +10,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DiglettGame">
         <activity
+            android:name=".MainActivity"
+            android:exported="false" />
+
+        <service
+            android:name=".BcmusicService"
+            android:enabled="true"
+            android:exported="true" />
+
+        <activity
             android:name=".RegisterActivity"
             android:exported="false" />
         <activity
@@ -17,7 +26,7 @@
             android:exported="false"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
-            android:name=".MainActivity"
+            android:name=".SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

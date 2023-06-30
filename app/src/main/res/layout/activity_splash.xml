@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    tools:context=".SplashActivity"
+    android:background="@drawable/basic_pic">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="233dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="490dp">
+        <ProgressBar
+            android:id="@+id/pgb_run"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="342dp"
+            android:layout_height="13dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="116dp"
+            android:max="90"
+            android:progressDrawable="@drawable/progress"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_pro"
+            android:layout_width="wrap_content"
+            android:layout_height="16dp"
+            android:layout_marginBottom="28dp"
+            android:text="50%"
+            android:textColor="#E1DFDF"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toTopOf="@+id/imagePlay"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/pgb_run" />
+
+        <ImageView
+            android:id="@+id/imagePlay"
+            android:layout_width="match_parent"
+            android:layout_height="76dp"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/pgb_run"
+            app:layout_constraintVertical_bias="1.0"
+            app:srcCompat="@drawable/play1" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</LinearLayout>
