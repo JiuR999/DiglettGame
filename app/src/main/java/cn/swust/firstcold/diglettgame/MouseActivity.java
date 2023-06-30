@@ -281,6 +281,7 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
                 if(isGameStart){
                     imageBtnPlay.setImageResource(R.mipmap.btn_start);
                     isGameStart = false;
+                    stopService(intentSound);
                 }else{
                     imageBtnPlay.setImageResource(R.mipmap.btn_pause);
                     isGameStart = true;
@@ -305,6 +306,7 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
             case R.id.ib_end:
                 isGameStart = false;
                 imageBtnPlay.setImageResource(R.mipmap.btn_start);
+                stopService(intentSound);
 
         }
     }
