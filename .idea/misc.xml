@@ -18,6 +18,8 @@
         <entry key="..\:/DiglettGame/app/src/main/res/layout/activity_register.xml" value="0.12604166666666666" />
         <entry key="..\:/DiglettGame/app/src/main/res/layout/activity_splash.xml" value="0.27395833333333336" />
         <entry key="..\:/DiglettGame/app/src/main/res/layout/dialog.xml" value="0.11875" />
+        <entry key="..\:/DiglettGame/app/src/main/res/layout/dialog_false.xml" value="0.27395833333333336" />
+        <entry key="..\:/DiglettGame/app/src/main/res/layout/dialog_success.xml" value="0.27395833333333336" />
         <entry key="..\:/DiglettGame/app/src/main/res/layout/level_item.xml" value="0.27395833333333336" />
       </map>
     </option>

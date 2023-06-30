@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.DisplayMetrics;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
@@ -18,7 +17,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.Random;
@@ -38,14 +36,6 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
     private ReNewDiglettThread reNewDiglett;
     //当前关卡数
     private int level = 1;
-    //记录用户目前游戏得分
-    private int grade = 0;
-    //当前游戏速度
-    private int speed = 1000-(level -1)*100;
-    //当前关卡目标通关分数
-    private int targetScore = 30+(level -1)*5;
-    //通关状态，默认为false
-    private boolean levelPass = false;
     //当前账户
     private String account;
     private ProgressBar progressBarTime;
@@ -64,16 +54,14 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
     private final int TIME = 2;
 
     private final int PROGRESS = 3;
-    //简单模式时间限制
-    private int time_limit = 60;
+     //简单模式时间限制
+    private int time_limit = 120;
     //简单模式刷新时间
     private int time_renew = 900;
-    //锤子音效
+    //记录用户目前游戏得分
+    private int grade = 0;
     private static final int ACTION_PLAY_CHUI = 1;
-    //地鼠音效
     private static final int ACTION_PLAY_SHU = 2;
-    //通关结果弹窗
-    private AlertDialog dialog;
     //操作UI界面
     private Handler handler = new Handler(){
         @Override
@@ -85,7 +73,7 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
                 imageViewMouse.setY(position[msg.arg1][1]);
                 playSound(ACTION_PLAY_SHU);
             }else if (msg.what==TIME){
-                progressBarTime.setProgress(msg.arg1);
+                  progressBarTime.setProgress(msg.arg1);
             }
         }
     };
@@ -97,23 +85,20 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
         initLevel();
 
         //  Toast.makeText(this, "高dp："+heightDp+"\n"+"宽DP"+widthDp, Toast.LENGTH_SHORT).show();
-        //当进度条结束之后
-        if(grade >= targetScore) levelPass = true;
-
 
     }
 
     private void initLevel() {
-        level = Integer.valueOf(getIntent().getStringExtra(LevelSelectionActivity.LEVEL))+1;
+        CurrentNum = Integer.valueOf(getIntent().getStringExtra(LevelSelectionActivity.LEVEL))+1;
         account = getIntent().getStringExtra(MainActivity.ACCOUNT);
-        Toast.makeText(this, "关卡："+ level +"账户："+account, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "关卡："+CurrentNum+"账户："+account, Toast.LENGTH_SHORT).show();
     }
 
     /**
      * 定义一个内部计时线程类,
      */
     private class CountTimeThread extends Thread{
-        int time_limit;
+            int time_limit;
         /**
          *
          * @param time_limit 根据用户选择的游戏模式设置对应时间限制
@@ -125,11 +110,11 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
         public void run() {
             super.run();
             while (!Thread.currentThread().isInterrupted()&&isGameStart){
-                this.time_limit--;
-                Message msg = new Message();
-                msg.what = TIME;
-                msg.arg1 = time_limit;
-                handler.sendMessage(msg);
+                   this.time_limit--;
+                   Message msg = new Message();
+                   msg.what = TIME;
+                   msg.arg1 = time_limit;
+                   handler.sendMessage(msg);
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
@@ -143,7 +128,7 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
      * 创建一个用于更新地鼠位置的线程类
      */
     private class ReNewDiglettThread extends Thread{
-        int mode;
+            int mode;
         public ReNewDiglettThread(int mode) {
             this.mode = mode;
         }
@@ -159,8 +144,7 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
                 isContinue[lcount] = 0;
                 handler.sendMessage(msg);
                 try {
-                    //speed随关卡变化
-                    Thread.sleep(speed);
+                    Thread.sleep(mode);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -281,7 +265,6 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
                 imageViewChui.setX(event.getRawX()-imageViewChui.getWidth()/2);
                 imageViewChui.setY(event.getRawY()-imageViewChui.getHeight()/3);
                 imageViewChui.setVisibility(View.VISIBLE);
-                playSound(ACTION_PLAY_CHUI);
                 break;
             case MotionEvent.ACTION_UP:
                 imageViewChui.setVisibility(View.INVISIBLE);
@@ -307,7 +290,7 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
                     reNewDiglett = new ReNewDiglettThread(time_renew);
                     reNewDiglett.start();
                     countTimeThread.start();
-
+                    
                 }
                 break;
             case R.id.ib_music:
@@ -325,54 +308,4 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
 
         }
     }
-    /**
-     * 弹窗事件
-     * */
-    public void levelResult (boolean isPassed){
-        ImageView btnNext = findViewById(R.id.imageNext);
-        ImageView btnReHome = findViewById(R.id.imageReHome);
-        ImageView btnRe = findViewById(R.id.imageRe);
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        LayoutInflater inflater = getLayoutInflater();
-        View dialogView = inflater.inflate(R.layout.dialog_success,null);
-        builder.setView(dialogView);
-        //返回菜单
-        btnReHome.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //返回选择菜单界面
-                finish();
-                dialog.dismiss();
-            }
-        });
-
-        //下一关
-        btnNext.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //下一关逻辑
-                level++;
-                dialog.dismiss();
-                Intent intent = getIntent();
-                finish();
-                startActivity(intent);
-            }
-        });
-
-        btnRe.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //重新闯关
-                dialog.dismiss();
-                Intent intent = getIntent();
-                finish();
-                startActivity(intent);
-            }
-        });
-
-        dialog = builder.create();
-        dialog.show();
-    }
-
 }
