@@ -73,7 +73,6 @@
             android:layout_width="280dp"
             android:layout_height="50dp"
             android:gravity="center_horizontal"
-            android:hint="测试"
             android:layout_gravity="center_horizontal"
             android:background="@drawable/edit" />
     </LinearLayout>
