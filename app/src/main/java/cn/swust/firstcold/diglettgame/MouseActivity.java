@@ -14,7 +14,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -87,13 +86,6 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
         //  Toast.makeText(this, "高dp："+heightDp+"\n"+"宽DP"+widthDp, Toast.LENGTH_SHORT).show();
 
     }
-
-    private void initLevel() {
-        level = Integer.valueOf(getIntent().getStringExtra(LevelSelectionActivity.LEVEL))+1;
-        account = getIntent().getStringExtra(MainActivity.ACCOUNT);
-        Toast.makeText(this, "关卡："+level+"账户："+account, Toast.LENGTH_SHORT).show();
-    }
-
     /**
      * 定义一个内部计时线程类,
      */
@@ -150,6 +142,14 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
                 }
             }
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        stopService(intentSound);
+        isGameStart = false;
+        isMusicStart = true;
     }
 
     /**
@@ -216,6 +216,54 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
         });
     }
 
+
+    //ImageButton的点击事件
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.ib_play:
+                if(isGameStart){
+                    imageBtnPlay.setImageResource(R.mipmap.btn_start);
+                    isGameStart = false;
+                    stopService(intentSound);
+                }else{
+                    imageBtnPlay.setImageResource(R.mipmap.btn_pause);
+                    isGameStart = true;
+                    // 开启一个线程用于游戏倒计时线程对象  默认为简单模式
+                    countTimeThread = new CountTimeThread(time_limit);
+                    //创建更新地鼠位置线程对象 默认模式为简单
+                    reNewDiglett = new ReNewDiglettThread(time_renew);
+                    reNewDiglett.start();
+                    countTimeThread.start();
+
+                }
+                break;
+            case R.id.ib_music:
+                if(isMusicStart){
+                    imageBtnMusic.setImageResource(R.mipmap.music_on);
+                    isMusicStart = false;
+                }else{
+                    imageBtnMusic.setImageResource(R.mipmap.music_off);
+                    isMusicStart  =true;
+                }
+                break;
+            case R.id.ib_end:
+                isGameStart = false;
+                imageBtnPlay.setImageResource(R.mipmap.btn_start);
+                COMBO = 0;
+                grade = 0;
+                stopService(intentSound);
+
+        }
+    }
+
+
+    private void initLevel() {
+        level = Integer.valueOf(getIntent().getStringExtra(LevelSelectionActivity.LEVEL))+1;
+        account = getIntent().getStringExtra(MainActivity.ACCOUNT);
+    }
+
+
     /**
      *
      * @param action 播放音效类型
@@ -273,43 +321,4 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
         return super.onTouchEvent(event);
     }
 
-    //ImageButton的点击事件
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.ib_play:
-                if(isGameStart){
-                    imageBtnPlay.setImageResource(R.mipmap.btn_start);
-                    isGameStart = false;
-                    stopService(intentSound);
-                }else{
-                    imageBtnPlay.setImageResource(R.mipmap.btn_pause);
-                    isGameStart = true;
-                    // 开启一个线程用于游戏倒计时线程对象  默认为简单模式
-                    countTimeThread = new CountTimeThread(time_limit);
-                    //创建更新地鼠位置线程对象 默认模式为简单
-                    reNewDiglett = new ReNewDiglettThread(time_renew);
-                    reNewDiglett.start();
-                    countTimeThread.start();
-                    
-                }
-                break;
-            case R.id.ib_music:
-                if(isMusicStart){
-                    imageBtnMusic.setImageResource(R.mipmap.music_on);
-                    isMusicStart = false;
-                }else{
-                    imageBtnMusic.setImageResource(R.mipmap.music_off);
-                    isMusicStart  =true;
-                }
-                break;
-            case R.id.ib_end:
-                isGameStart = false;
-                imageBtnPlay.setImageResource(R.mipmap.btn_start);
-                COMBO = 0;
-                grade = 0;
-                stopService(intentSound);
-
-        }
-    }
 }
