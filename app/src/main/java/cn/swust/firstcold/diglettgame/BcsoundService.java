@@ -32,7 +32,7 @@ public class BcsoundService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         if(intent != null && intent.hasExtra("打地鼠界面")){
             int action = intent.getIntExtra("打地鼠界面",-1);
-            soundPool.play(soundMap.get(action),2,2,0,0,1);
+            soundPool.play(soundMap.get(action),2,2,1,0,1);
         }
         return super.onStartCommand(intent, flags, startId);
     }

@@ -35,7 +35,7 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
     //刷新地鼠位置线程
     private ReNewDiglettThread reNewDiglett;
     //当前关卡数
-    private int CurrentNum = 1;
+    private int level = 1;
     //当前账户
     private String account;
     private ProgressBar progressBarTime;
@@ -89,9 +89,9 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void initLevel() {
-        CurrentNum = Integer.valueOf(getIntent().getStringExtra(LevelSelectionActivity.LEVEL))+1;
+        level = Integer.valueOf(getIntent().getStringExtra(LevelSelectionActivity.LEVEL))+1;
         account = getIntent().getStringExtra(MainActivity.ACCOUNT);
-        Toast.makeText(this, "关卡："+CurrentNum+"账户："+account, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "关卡："+level+"账户："+account, Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -201,11 +201,10 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
                     }
                     imageViewMouse.setVisibility(View.INVISIBLE);
                     imageViewChui.setX(event.getRawX()-imageViewChui.getWidth()/2);
-                    imageViewChui.setY(event.getRawY()-imageViewChui.getHeight()-70);
+                    imageViewChui.setY(event.getRawY()-imageViewChui.getHeight()-60);
                     imageViewChui.setVisibility(View.VISIBLE);
                     playSound(ACTION_PLAY_CHUI);
                     tv_count.setText("分数: "+grade);
-                    //tv_count.setText("COMB x" + COMBO);
                 }
                 //用户抬起手后，将锤子设置为不可见
                 else if(event.getAction()==MotionEvent.ACTION_UP) {
@@ -263,7 +262,7 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
         switch (event.getAction()){
             case MotionEvent.ACTION_DOWN:
                 imageViewChui.setX(event.getRawX()-imageViewChui.getWidth()/2);
-                imageViewChui.setY(event.getRawY()-imageViewChui.getHeight()/3);
+                imageViewChui.setY((float) (event.getRawY()-imageViewChui.getHeight()/2.5));
                 imageViewChui.setVisibility(View.VISIBLE);
                 break;
             case MotionEvent.ACTION_UP:
@@ -280,6 +279,7 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
             case R.id.ib_play:
                 if(isGameStart){
                     imageBtnPlay.setImageResource(R.mipmap.btn_start);
+                    stopService(intentSound);
                     isGameStart = false;
                 }else{
                     imageBtnPlay.setImageResource(R.mipmap.btn_pause);
@@ -305,7 +305,17 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
             case R.id.ib_end:
                 isGameStart = false;
                 imageBtnPlay.setImageResource(R.mipmap.btn_start);
+                stopService(intentSound);
+
+                COMBO = 0;
+                grade = 0;
 
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        stopService(intentSound);
     }
 }
