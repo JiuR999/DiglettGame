@@ -40,7 +40,7 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
     private ProgressBar progressBarTime;
     private float[][] position;
     private boolean isGameStart = false;
-    private boolean isMusicStart = false;
+    private boolean isMusicStart = true;
     private int[] isContinue = {0,0,0,0,0};
     //记录连击数量
     private int COMBO = 0;
@@ -70,7 +70,9 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
                 imageViewMouse.setVisibility(View.VISIBLE);
                 imageViewMouse.setX(position[msg.arg1][0]);
                 imageViewMouse.setY(position[msg.arg1][1]);
-                playSound(ACTION_PLAY_SHU);
+                if(isMusicStart){
+                    playSound(ACTION_PLAY_SHU);
+                }
             }else if (msg.what==TIME){
                   progressBarTime.setProgress(msg.arg1);
             }
@@ -203,7 +205,9 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
                     imageViewChui.setX(event.getRawX()-imageViewChui.getWidth()/2);
                     imageViewChui.setY(event.getRawY()-imageViewChui.getHeight()-70);
                     imageViewChui.setVisibility(View.VISIBLE);
-                    playSound(ACTION_PLAY_CHUI);
+                    if(isMusicStart){
+                        playSound(ACTION_PLAY_CHUI);
+                    }
                     tv_count.setText("分数: "+grade);
                     //tv_count.setText("COMB x" + COMBO);
                 }
@@ -225,7 +229,7 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
                 if(isGameStart){
                     imageBtnPlay.setImageResource(R.mipmap.btn_start);
                     isGameStart = false;
-                    stopService(intentSound);
+                    //stopService(intentSound);
                 }else{
                     imageBtnPlay.setImageResource(R.mipmap.btn_pause);
                     isGameStart = true;
@@ -240,10 +244,10 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
                 break;
             case R.id.ib_music:
                 if(isMusicStart){
-                    imageBtnMusic.setImageResource(R.mipmap.music_on);
+                    imageBtnMusic.setImageResource(R.mipmap.music_off);
                     isMusicStart = false;
                 }else{
-                    imageBtnMusic.setImageResource(R.mipmap.music_off);
+                    imageBtnMusic.setImageResource(R.mipmap.music_on);
                     isMusicStart  =true;
                 }
                 break;
