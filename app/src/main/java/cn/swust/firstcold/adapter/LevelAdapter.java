@@ -35,6 +35,7 @@ public class LevelAdapter extends RecyclerView.Adapter<LevelAdapter.LevelViewHol
 
     @Override
     public void onBindViewHolder(@NonNull LevelViewHolder holder, int position) {
+
         //绑定数据到关卡视图
         Level level = levels.get(position);
         if (level.isLocked()){
@@ -45,7 +46,6 @@ public class LevelAdapter extends RecyclerView.Adapter<LevelAdapter.LevelViewHol
         if(!level.isLocked()){
             //未锁，替换为黄方块
             holder.lockIon.setImageResource(R.drawable.fk);
-//            holder.lockIon.setVisibility(View.INVISIBLE);
         }
 
         // 设置关卡项之间的间距

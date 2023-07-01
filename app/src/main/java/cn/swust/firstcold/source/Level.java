@@ -2,7 +2,9 @@ package cn.swust.firstcold.source;
 
 public class Level {
     private String name;
+    //是否解锁
     private boolean locked;
+    //是否通关
     private boolean completed;
 
     public Level(String name, boolean locked, boolean completed){

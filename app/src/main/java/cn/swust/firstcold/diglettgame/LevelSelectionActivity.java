@@ -106,10 +106,13 @@ public class LevelSelectionActivity extends AppCompatActivity {
         SharedPreferences sp = getSharedPreferences(MouseActivity.CONFIG_NAME,MouseActivity.CONFIG_MODE);
         for (int i = 0; i < 10; i++){
             String levelString = String.valueOf(i+1);
-            levels.add(new Level(levelString,!(sp.getBoolean(levelString,false)),sp.getBoolean(levelString,false)));
+            if(i!=0){
+                levels.add(new Level(levelString,!(sp.getBoolean(String.valueOf(i),false)),sp.getBoolean(levelString,false)));
+            }else{
+                //设置第一个关卡解锁状态
+                levels.add(new Level(levelString,false,sp.getBoolean(levelString,false)));
+            }
         }
-        //设置第一个关卡解锁状态
-        levels.get(0).setLocked(false);
     }
 
     @Override
