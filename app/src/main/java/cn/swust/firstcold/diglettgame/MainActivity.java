@@ -114,7 +114,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnLog = findViewById(R.id.btn_log);
         editTextUser = findViewById(R.id.edit_user);
         editTextPassword = findViewById(R.id.edit_password);
-        btnGame.setOnClickListener(this);
         btnLog.setOnClickListener(this);
         tvRegister = findViewById(R.id.tv_register);
         tvRegister.setMovementMethod(LinkMovementMethod.getInstance());
