@@ -111,7 +111,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         window.setLayout(width-200,height*1/4);
     }
     private void InitView() {
-        btnGame = findViewById(R.id.btn_game);
         btnLog = findViewById(R.id.btn_log);
         editTextUser = findViewById(R.id.edit_user);
         editTextPassword = findViewById(R.id.edit_password);
@@ -125,9 +124,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.btn_game:
-                startActivity(new Intent(MainActivity.this,MouseActivity.class));
-                break;
             case R.id.btn_log:
                 Login();
                 break;
