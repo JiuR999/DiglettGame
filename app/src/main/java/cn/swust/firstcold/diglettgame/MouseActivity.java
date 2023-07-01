@@ -268,6 +268,7 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
         imageBtnEnd.setOnClickListener(this);
 
         tv_count = findViewById(R.id.tv_count);
+        tv_count.setBackgroundResource(R.drawable.score2);
         //设置字体
         AssetManager assetManager = this.getAssets();
 

@@ -25,18 +25,17 @@
             android:text="第1关"
             android:textColor="@color/orange"
             android:textSize="25sp" />
+
         <TextView
             android:id="@+id/tv_count"
-            android:layout_width="80dp"
-            android:layout_height="60dp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:layout_centerHorizontal="true"
+            android:background="@drawable/score2"
             android:gravity="center"
             android:text="分数"
-
-            android:background="@drawable/text"
             android:textColor="@color/orange"
-            android:backgroundTint="@color/actionbar"
-            android:textSize="25sp" />
+            android:textSize="20sp" />
     </LinearLayout>
 
     <ProgressBar
@@ -133,7 +132,7 @@
             android:layout_marginBottom="70dp"
             android:layout_toRightOf="@id/ib_play"
             android:background="@null"
-            android:src="@mipmap/btn_end" />
+            android:src="@mipmap/fin" />
 
         <ImageButton
             android:id="@+id/ib_return"
