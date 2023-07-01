@@ -8,16 +8,36 @@
     android:padding="10dp"
     tools:context=".MouseActivity">
 
-    <TextView
-        android:id="@+id/tv_count"
-        android:layout_width="80dp"
-        android:layout_height="60dp"
-        android:layout_centerHorizontal="true"
-        android:gravity="center"
-        android:text="25分"
-        android:background="@drawable/text"
-        android:textColor="@color/orange"
-        android:textSize="25sp" />
+    <LinearLayout
+        android:id="@+id/liner_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+        <TextView
+            android:id="@+id/tv_level"
+            android:layout_width="80dp"
+            android:layout_height="60dp"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/text"
+            android:gravity="center"
+            android:layout_marginRight="10dp"
+            android:text="第1关"
+            android:textColor="@color/orange"
+            android:textSize="25sp" />
+        <TextView
+            android:id="@+id/tv_count"
+            android:layout_width="80dp"
+            android:layout_height="60dp"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:text="分数"
+
+            android:background="@drawable/text"
+            android:textColor="@color/orange"
+            android:backgroundTint="@color/actionbar"
+            android:textSize="25sp" />
+    </LinearLayout>
 
     <ProgressBar
         android:id="@+id/pgb_time"
@@ -36,13 +56,27 @@
         android:id="@+id/tv_curtime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tv_count"
-        android:layout_centerHorizontal="true"
-        android:layout_marginLeft="20dp"
+        android:layout_below="@+id/liner_tv"
+        android:layout_marginLeft="105dp"
         android:layout_marginTop="15dp"
         android:drawableLeft="@mipmap/time"
         android:text="0秒"
         android:textColor="@color/sandybrown"
+        android:textSize="25sp" />
+
+    <TextView
+        android:id="@+id/tv_target"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_below="@id/liner_tv"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="55dp"
+        android:background="@drawable/edit"
+        android:drawableLeft="@mipmap/target"
+        android:gravity="center"
+        android:text="25分"
+        android:textColor="@color/orange"
         android:textSize="25sp" />
     <ImageButton
         android:id="@+id/ib_list"

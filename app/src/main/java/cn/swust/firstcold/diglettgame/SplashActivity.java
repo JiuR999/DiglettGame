@@ -34,6 +34,7 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
         setContentView(R.layout.activity_splash);
         InitView();
         runProgressBar();
+        startService(new Intent(SplashActivity.this,BcmusicService.class));
     }
     private void runProgressBar() {
         new Thread(new Runnable() {

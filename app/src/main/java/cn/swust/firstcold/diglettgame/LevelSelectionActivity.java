@@ -1,6 +1,7 @@
 package cn.swust.firstcold.diglettgame;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -102,9 +103,10 @@ public class LevelSelectionActivity extends AppCompatActivity {
 
     protected void intiData(){
         levels = new ArrayList<>();
-        for (int i = 0; i < 11; i++){
+        SharedPreferences sp = getSharedPreferences(MouseActivity.CONFIG_NAME,MouseActivity.CONFIG_MODE);
+        for (int i = 0; i < 10; i++){
             String levelString = String.valueOf(i+1);
-            levels.add(new Level(levelString,true,false));
+            levels.add(new Level(levelString,!(sp.getBoolean(levelString,false)),sp.getBoolean(levelString,false)));
         }
         //设置第一个关卡解锁状态
         levels.get(0).setLocked(false);

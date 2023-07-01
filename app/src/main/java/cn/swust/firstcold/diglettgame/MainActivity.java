@@ -67,6 +67,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     };
 
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        InitView();
+    }
     private void setDialog(String tip,int command) {
         Dialog dialog = new Dialog(MainActivity.this);
         View view = View.inflate(MainActivity.this,R.layout.dialog,null);
@@ -102,14 +110,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         window.setLayout(width-200,height*1/4);
     }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        InitView();
-    }
-
     private void InitView() {
         btnGame = findViewById(R.id.btn_game);
         btnLog = findViewById(R.id.btn_log);

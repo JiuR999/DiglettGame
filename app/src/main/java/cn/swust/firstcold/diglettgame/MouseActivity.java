@@ -1,25 +1,24 @@
 package cn.swust.firstcold.diglettgame;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.DisplayMetrics;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.Random;
@@ -28,30 +27,36 @@ import java.util.Random;
 public class MouseActivity extends AppCompatActivity implements View.OnClickListener {
     //锤子和地鼠控件
     private ImageView imageViewMouse,imageViewChui;
-    //设置游戏音乐关闭、开始或者暂停游戏、排行榜、结束游戏
-    private ImageButton imageBtnMusic,imageBtnPlay,imageBtnList,imageBtnEnd;
-    private TextView tv_count;
+    //设置游戏音乐关闭、开始或者暂停游戏、排行榜、结束游戏、返回
+    private ImageButton imageBtnMusic,imageBtnPlay,imageBtnList,imageBtnEnd,imageButtonBack;
+    //显示得分、当前剩余时间、关卡数，目标分
+    private TextView tv_count,tv_curtime,tv_level,tv_target;
     //标志连击
     private int lcount = 0;
+
+    static String recordCount = "0"; // 用于存储得分
+
+    public static final String CONFIG_NAME = "user_config";
+    public static final int CONFIG_MODE = Context.MODE_PRIVATE;
+
+    //为每个关卡设置一个变量，用于分别用SharedPreferences方法存储各个关卡的最高分
+    public static final String SCORE1 = "user_Score1";
+    public static final String SCORE2 = "user_Score2";
+    public static final String SCORE3 = "user_Score3";
+    public static final String SCORE4 = "user_Score4";
+    public static final String SCORE5 = "user_Score5";
+    public static final String SCORE6 = "user_Score6";
+    public static final String SCORE7 = "user_Score7";
+    public static final String SCORE8 = "user_Score8";
+    public static final String SCORE9 = "user_Score9";
+    public static final String SCORE10 = "user_Score10";
+
     //计时线程
     private CountTimeThread countTimeThread;
-    private static final int TIME_PASS = 4;
     //刷新地鼠位置线程
     private ReNewDiglettThread reNewDiglett;
-    /***
-     * 测试
-     */
     //当前关卡数
     private int level = 1;
-    //记录用户目前游戏得分
-    private int grade = 0;
-    //当前游戏速度
-    private int speed = 1000-(level -1)*100;
-    //当前关卡目标通关分数
-    //private int targetScore = 30+(level -1)*5;
-    private int targetScore = 3;
-    //通关状态，默认为false
-    private boolean levelPass;
     //当前账户
     private String account;
     private ProgressBar progressBarTime;
@@ -71,15 +76,14 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
 
     private final int PROGRESS = 3;
     //简单模式时间限制
-    private int time_limit = 10;
+    private int TIME_LIMIT = 10;
     //简单模式刷新时间
-    private int time_renew = 900;
-    //锤子音效
+    private int TIME_RENEW = 900;
+    //记录用户目前游戏得分
+    private int grade = 0;
+    private int TARGETGRADE = 10;
     private static final int ACTION_PLAY_CHUI = 1;
-    //地鼠音效
     private static final int ACTION_PLAY_SHU = 2;
-    //通关结果弹窗
-    private AlertDialog dialog;
     //操作UI界面
     private Handler handler = new Handler(){
         @Override
@@ -91,17 +95,58 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
                 imageViewMouse.setY(position[msg.arg1][1]);
                 playSound(ACTION_PLAY_SHU);
             }else if (msg.what==TIME){
+                TIME_LIMIT = msg.arg1;
                 progressBarTime.setProgress(msg.arg1);
-            }
-            if(msg.what == TIME_PASS){
-                //当进度条结束之后
-                isGameStart = false;
-                if(grade >= targetScore) levelPass = true;
-                else levelPass = false;
-                levelResult(levelPass);
+                tv_curtime.setText(""+msg.arg1+"秒");
+                //进度条结束
+                if (msg.arg1==0){
+                    isGameStart = false;
+                    grade+=COMBO*2;
+
+                    if(grade>=TARGETGRADE){
+                        SharedPreferences sp = getSharedPreferences(CONFIG_NAME,CONFIG_MODE);
+                        SharedPreferences.Editor editor = sp.edit();
+                        editor.putBoolean(String.valueOf(level),true);
+                        editor.apply();
+                        new AlertDialog.Builder(MouseActivity.this).setMessage("您的得分是"+grade)
+                                .setTitle("恭喜通关！").setPositiveButton("下一关", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                reSetGame();
+
+                                level++;
+                                dialog.dismiss();
+                            }
+                        }).setNegativeButton("返回", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                reSetGame();
+                                dialog.dismiss();
+                            }
+                        }).show();
+                    }else{
+                        new AlertDialog.Builder(MouseActivity.this).setMessage("您的得分是"+grade+"离通关分数还差"+(TARGETGRADE-grade)+"分")
+                                .setTitle("还需要加油哟！").setPositiveButton("再试一次", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                reSetGame();
+                                dialog.dismiss();
+                            }
+                        }).setNegativeButton("返回", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                reSetGame();
+                                dialog.dismiss();
+                            }
+                        }).show();
+                    }
+
+                }
             }
         }
     };
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -111,14 +156,32 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
 
         //  Toast.makeText(this, "高dp："+heightDp+"\n"+"宽DP"+widthDp, Toast.LENGTH_SHORT).show();
 
-
-
     }
 
+    /**
+     * 游戏结束后重置
+     */
+    private void reSetGame() {
+        isGameStart = false;
+        TIME_LIMIT = 10;
+        imageBtnPlay.setImageResource(R.mipmap.btn_start);
+        grade+=COMBO*2;
+        loadConfig(level);
+        saveConfig(level);
+        grade = 0;
+        COMBO = 0;
+    }
     private void initLevel() {
         level = Integer.valueOf(getIntent().getStringExtra(LevelSelectionActivity.LEVEL))+1;
+        tv_level = findViewById(R.id.tv_level);
+        tv_target = findViewById(R.id.tv_target);
+        tv_level.setText("第"+level+"关");
+
+        TARGETGRADE = 10+(level-1)*2;
+        tv_target.setText(""+TARGETGRADE+"分");
+        TIME_LIMIT = 60-level*5;
+        TIME_RENEW = 900-(level-1)*50;
         account = getIntent().getStringExtra(MainActivity.ACCOUNT);
-        Toast.makeText(this, "关卡："+ level +"账户："+account, Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -136,20 +199,16 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
         @Override
         public void run() {
             super.run();
-            while (!Thread.currentThread().isInterrupted()&&isGameStart){
+            while (!Thread.currentThread().isInterrupted()&&isGameStart&&this.time_limit>=0){
+                this.time_limit--;
                 Message msg = new Message();
-                if(time_limit<=0){
-                    handler.sendEmptyMessage(TIME_PASS);
-                }else {
-                    this.time_limit--;
-                    msg.what = TIME;
-                    msg.arg1 = time_limit;
-                    handler.sendMessage(msg);
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                msg.what = TIME;
+                msg.arg1 = this.time_limit;
+                handler.sendMessage(msg);
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
         }
@@ -175,8 +234,7 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
                 isContinue[lcount] = 0;
                 handler.sendMessage(msg);
                 try {
-                    //speed随关卡变化
-                    Thread.sleep(speed);
+                    Thread.sleep(mode);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -189,14 +247,16 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
      */
     private void initView() {
         initPosition();
+        tv_curtime = findViewById(R.id.tv_curtime);
         intentSound = new Intent(this,BcsoundService.class);
         progressBarTime = findViewById(R.id.pgb_time);
         //绑定图片按钮控件并设计监听事件
-        progressBarTime.setMax(time_limit);
+        progressBarTime.setMax(TIME_LIMIT);
 
         imageViewMouse = findViewById(R.id.iv_mouse);
         imageViewChui = findViewById(R.id.iv_chuizi);
-
+        imageButtonBack = findViewById(R.id.ib_return);
+        imageButtonBack.setOnClickListener(this);
         imageBtnMusic = findViewById(R.id.ib_music);
         imageBtnMusic.setOnClickListener(this);
         imageBtnPlay = findViewById(R.id.ib_play);
@@ -206,14 +266,17 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
         imageBtnList.setOnClickListener(this);
         imageBtnEnd = findViewById(R.id.ib_end);
         imageBtnEnd.setOnClickListener(this);
+
         tv_count = findViewById(R.id.tv_count);
+        //设置字体
         AssetManager assetManager = this.getAssets();
+
         tv_count.setTypeface(Typeface.createFromAsset(assetManager,"fonts/FZYTK.TTF"));
         //设置用户点击老鼠后的响应事件
         imageViewMouse.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction()==MotionEvent.ACTION_DOWN){
+                if (event.getAction()==MotionEvent.ACTION_DOWN&&isGameStart){
                     grade++;
                     isContinue[lcount] = 1;
                     if(lcount==0){
@@ -236,7 +299,7 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
                     imageViewChui.setY(event.getRawY()-imageViewChui.getHeight()-70);
                     imageViewChui.setVisibility(View.VISIBLE);
                     playSound(ACTION_PLAY_CHUI);
-                    tv_count.setText("分数: "+grade);
+                    tv_count.setText("分数\n"+grade);
                     //tv_count.setText("COMB x" + COMBO);
                 }
                 //用户抬起手后，将锤子设置为不可见
@@ -297,13 +360,27 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
                 imageViewChui.setX(event.getRawX()-imageViewChui.getWidth()/2);
                 imageViewChui.setY(event.getRawY()-imageViewChui.getHeight()/3);
                 imageViewChui.setVisibility(View.VISIBLE);
-                playSound(ACTION_PLAY_CHUI);
                 break;
             case MotionEvent.ACTION_UP:
                 imageViewChui.setVisibility(View.INVISIBLE);
                 break;
         }
         return super.onTouchEvent(event);
+    }
+
+    /**
+     * 播放音乐
+     */
+    private void startPlayBacMusic() {
+        Intent intent = new Intent(MouseActivity.this,BcmusicService.class);
+        startService(intent);
+    }
+    /**
+     * 停止播放音乐
+     */
+    private void stopPlayBacMusic() {
+        Intent intent = new Intent(MouseActivity.this,BcmusicService.class);
+        stopService(intent);
     }
 
     //ImageButton的点击事件
@@ -314,92 +391,125 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
                 if(isGameStart){
                     imageBtnPlay.setImageResource(R.mipmap.btn_start);
                     isGameStart = false;
+                    stopService(intentSound);
                 }else{
                     imageBtnPlay.setImageResource(R.mipmap.btn_pause);
                     isGameStart = true;
+                    progressBarTime.setVisibility(View.VISIBLE);
                     // 开启一个线程用于游戏倒计时线程对象  默认为简单模式
-                    countTimeThread = new CountTimeThread(time_limit);
+                    countTimeThread = new CountTimeThread(TIME_LIMIT);
                     //创建更新地鼠位置线程对象 默认模式为简单
-                    reNewDiglett = new ReNewDiglettThread(time_renew);
+                    reNewDiglett = new ReNewDiglettThread(TIME_RENEW);
                     reNewDiglett.start();
                     countTimeThread.start();
-
                 }
                 break;
             case R.id.ib_music:
                 if(isMusicStart){
-                    imageBtnMusic.setImageResource(R.mipmap.music_on);
-                    isMusicStart = false;
-                }else{
                     imageBtnMusic.setImageResource(R.mipmap.music_off);
+                    isMusicStart = false;
+                    stopPlayBacMusic();
+                }else{
+                    imageBtnMusic.setImageResource(R.mipmap.music_on);
                     isMusicStart  =true;
+                    startPlayBacMusic();
                 }
                 break;
             case R.id.ib_end:
                 isGameStart = false;
                 imageBtnPlay.setImageResource(R.mipmap.btn_start);
+                loadConfig(level);//先读取一次排行榜中已经存储的内容，即使不进行游戏也可以点击排行榜观看已存储的数据
+                saveConfig(level);  //若没进行游戏，则显示历史保存的记录。若进行了游戏，则保存最新游戏的记录
+                COMBO = 0;
+                grade = 0;
+                stopService(intentSound);
+                break;
+            case R.id.ib_list:
+                loadConfig(level);//先读取一次排行榜中已经存储的内容
+                saveConfig(level);  //若没进行游戏，则显示历史保存的记录。若进行了游戏，则保存最新游戏的记录
+                startActivity(new Intent(MouseActivity.this, rankingListActivity.class));
+                break;
+            case R.id.ib_return:
+                finish();
+                break;
+        }
+    }
+
+    protected void saveConfig(int i) //存储第i关的游戏最高分数
+    {
+        int maxCount; //用于存储最新得分和已存储的得分较大的一个
+        SharedPreferences sp = getSharedPreferences(CONFIG_NAME,CONFIG_MODE);
+        SharedPreferences.Editor editor = sp.edit();
+        switch (i)
+        {
+            case 1: maxCount = Math.max(grade,Integer.parseInt(recordCount));
+                editor.putString(SCORE1,String.valueOf(maxCount));
+                editor.apply();
+                break;
+            case 2: maxCount = Math.max(grade,Integer.parseInt(recordCount));
+                editor.putString(SCORE2,String.valueOf(maxCount));
+                editor.apply();
+                break;
+            case 3: maxCount = Math.max(grade,Integer.parseInt(recordCount));
+                editor.putString(SCORE3,String.valueOf(maxCount));
+                editor.apply();
+                break;
+            case 4: maxCount = Math.max(grade,Integer.parseInt(recordCount));
+                editor.putString(SCORE4,String.valueOf(maxCount));
+                editor.apply();
+                break;
+            case 5: maxCount = Math.max(grade,Integer.parseInt(recordCount));
+                editor.putString(SCORE5,String.valueOf(maxCount));
+                editor.apply();
+                break;
+            case 6: maxCount = Math.max(grade,Integer.parseInt(recordCount));
+                editor.putString(SCORE6,String.valueOf(maxCount));
+                editor.apply();
+                break;
+            case 7: maxCount = Math.max(grade,Integer.parseInt(recordCount));
+                editor.putString(SCORE7,String.valueOf(maxCount));
+                editor.apply();
+                break;
+            case 8: maxCount = Math.max(grade,Integer.parseInt(recordCount));
+                editor.putString(SCORE8,String.valueOf(maxCount));
+                editor.apply();
+                break;
+            case 9: maxCount = Math.max(grade,Integer.parseInt(recordCount));
+                editor.putString(SCORE9,String.valueOf(maxCount));
+                editor.apply();
+                break;
+            case 10: maxCount = Math.max(grade,Integer.parseInt(recordCount));
+                editor.putString(SCORE10,String.valueOf(maxCount));
+                editor.apply();
+                break;
 
         }
     }
-    /**
-     * 弹窗事件
-     * */    public void levelResult (boolean isPassed){
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        LayoutInflater inflater = getLayoutInflater();
-        if(isPassed==true) {
-            View dialogView = inflater.inflate(R.layout.dialog_success, null);
-            builder.setView(dialogView);
-            ImageView btnNext = dialogView.findViewById(R.id.imageNext);
-            ImageView btnReHome = dialogView.findViewById(R.id.imageReHome);
-            //下一关
-            btnNext.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    //测试用，level未同步
-                    level++;
-                    dialog.dismiss();
-                    Intent intent = getIntent();
-                    finish();
-                    startActivity(intent);
-                }
-            });
-            //返回菜单
-            btnReHome.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    finish();
-                    dialog.dismiss();
-                }
-            });
-        }else {
-            View dialogView = inflater.inflate(R.layout.dialog_false, null);
-            builder.setView(dialogView);
-
-            ImageView btnReHome2 = dialogView.findViewById(R.id.imageReHome2);
-            ImageView btnRe = dialogView.findViewById(R.id.imageRe);
-            //重玩本关
-            btnRe.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    dialog.dismiss();
-                    Intent intent = getIntent();
-                    finish();
-                    startActivity(intent);
-                }
-            });
-            //返回菜单
-            btnReHome2.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    finish();
-                    dialog.dismiss();
-                }
-            });
+    protected void loadConfig(int i) //用于显示第i关的最高分数
+    {
+        SharedPreferences sp = getSharedPreferences(CONFIG_NAME,CONFIG_MODE);
+        switch (i)
+        {
+            case 1: recordCount = sp.getString(SCORE1,"0");
+                break;
+            case 2: recordCount = sp.getString(SCORE2,"0");
+                break;
+            case 3: recordCount = sp.getString(SCORE3,"0");
+                break;
+            case 4: recordCount = sp.getString(SCORE4,"0");
+                break;
+            case 5: recordCount = sp.getString(SCORE5,"0");
+                break;
+            case 6: recordCount = sp.getString(SCORE6,"0");
+                break;
+            case 7: recordCount = sp.getString(SCORE7,"0");
+                break;
+            case 8: recordCount = sp.getString(SCORE8,"0");
+                break;
+            case 9: recordCount = sp.getString(SCORE9,"0");
+                break;
+            case 10: recordCount = sp.getString(SCORE10,"0");
+                break;
         }
-        dialog = builder.create();
-        dialog.show();
-
     }
-
-
 }
