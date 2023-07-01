@@ -482,8 +482,8 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
                 editor.putString(SCORE10,String.valueOf(maxCount));
                 editor.apply();
                 break;
-
         }
+
     }
     protected void loadConfig(int i) //用于显示第i关的最高分数
     {

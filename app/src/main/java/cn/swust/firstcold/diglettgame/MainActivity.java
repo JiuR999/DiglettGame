@@ -2,8 +2,10 @@ package cn.swust.firstcold.diglettgame;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -17,6 +19,7 @@ import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -30,11 +33,21 @@ import cn.swust.firstcold.roomdatabase.UserDataBase;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     public static final String ACCOUNT = "account";
     private Button btnGame,btnLog;
+    private CheckBox checkBox;
     private TextView tvRegister;
     private UserDataBase db;
     private UserDao userDao;
     private EditText editTextUser,editTextPassword;
     private String account;
+
+    private static final String CONFIG_NAME = "user_config";
+    private static final int CONFIG_MODE = Context.MODE_PRIVATE;
+
+    public static final String USER_ACCOUNT = "user_account";
+    public static final String USER_PASSWORD = "user_password";
+
+
+
     //登录成功消息类型
     private final int LOGIN_SUCCEED = 1;
     //账号未注册消息类型
@@ -74,6 +87,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         InitView();
+        showAccount();//显示账号，密码信息
     }
     private void setDialog(String tip,int command) {
         Dialog dialog = new Dialog(MainActivity.this);
@@ -118,13 +132,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tvRegister = findViewById(R.id.tv_register);
         tvRegister.setMovementMethod(LinkMovementMethod.getInstance());
         tvRegister.setText(getClickableSpan());
+        checkBox = findViewById(R.id.checkbox);
     }
+
+
 
     @Override
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.btn_log:
                 Login();
+                if (checkBox.isChecked())
+                {
+                    rememberPassword();
+                }
+                else {
+                    notRememberPassword();
+                }
                 break;
         }
     }
@@ -145,11 +169,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     if(user==null){
                         msg.what = NO_ACCOUNT;
                         logHandler.sendMessage(msg);
-                    }else{
+                    }
+                    else{
                         if(!password.equals(user.getPassword())){
                             msg.what = PASSWORD_ERROR;
                             logHandler.sendMessage(msg);
-                        }else{
+                        }
+                        else{
                             msg.what = LOGIN_SUCCEED;
                             logHandler.sendMessage(msg);
                         }
@@ -157,6 +183,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             }).start();
     }
+
+    protected void rememberPassword()//记住密码
+    {
+        SharedPreferences sp = getSharedPreferences(CONFIG_NAME,CONFIG_MODE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString(USER_ACCOUNT,editTextUser.getText().toString());
+        editor.putString(USER_PASSWORD,editTextPassword.getText().toString());
+        editor.apply();
+    }
+    protected void notRememberPassword()//不记住密码
+    {
+        SharedPreferences sp = getSharedPreferences(CONFIG_NAME,CONFIG_MODE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString(USER_ACCOUNT,editTextUser.getText().toString());
+        editor.putString(USER_PASSWORD,"");
+        editor.apply();
+    }
+
+    protected void showAccount()
+    {
+        SharedPreferences sp = getSharedPreferences(CONFIG_NAME,CONFIG_MODE);
+        editTextUser.setText(sp.getString(USER_ACCOUNT,""));
+        editTextPassword.setText(sp.getString(USER_PASSWORD,""));
+
+    }
+
+
+
 
     //实现点击文字
     private SpannableString getClickableSpan() {
