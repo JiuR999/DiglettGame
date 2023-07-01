@@ -33,7 +33,6 @@ public class LevelSelectionActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_level_selection);
-        account = getIntent().getStringExtra(MainActivity.ACCOUNT);
         recyclerView = findViewById(R.id.recycler_view);
         //初始化关卡数据
         intiData();
@@ -72,7 +71,7 @@ public class LevelSelectionActivity extends AppCompatActivity {
                 }else{
                     Intent intent = new Intent(LevelSelectionActivity.this, MouseActivity.class);
                     intent.putExtra(MainActivity.ACCOUNT,account);
-                    intent.putExtra(LevelSelectionActivity.LEVEL,String.valueOf(position));
+//                    intent.putExtra(LevelSelectionActivity.LEVEL,String.valueOf(position));
                     startActivity(intent);
                 }
             }
@@ -103,16 +102,29 @@ public class LevelSelectionActivity extends AppCompatActivity {
 
     protected void intiData(){
         levels = new ArrayList<>();
-        SharedPreferences sp = getSharedPreferences(MouseActivity.CONFIG_NAME,MouseActivity.CONFIG_MODE);
+//        SharedPreferences sp = getSharedPreferences(MouseActivity.CONFIG_NAME,MouseActivity.CONFIG_MODE);
+        account = getIntent().getStringExtra(MainActivity.ACCOUNT);
+        //获取用户关卡数
+        SharedPreferences sp = getSharedPreferences(account,MODE_PRIVATE);
+        String strlevels = sp.getString("user_level","");
+        int levelnum = Integer.parseInt(strlevels);
         for (int i = 0; i < 10; i++){
             String levelString = String.valueOf(i+1);
-            if(i!=0){
-                levels.add(new Level(levelString,!(sp.getBoolean(String.valueOf(i),false)),sp.getBoolean(levelString,false)));
-            }else{
-                //设置第一个关卡解锁状态
+            if(i < levelnum){
                 levels.add(new Level(levelString,false,sp.getBoolean(levelString,false)));
+            }else {
+                levels.add(new Level(levelString,!(sp.getBoolean(String.valueOf(i),false)),sp.getBoolean(levelString,false)));
             }
         }
+//        for (int i = 0; i < 10; i++){
+//            String levelString = String.valueOf(i+1);
+//            if(i!=0){
+//                levels.add(new Level(levelString,!(sp.getBoolean(String.valueOf(i),false)),sp.getBoolean(levelString,false)));
+//            }else{
+//                //设置第一个关卡解锁状态
+//                levels.add(new Level(levelString,false,sp.getBoolean(levelString,false)));
+//            }
+//        }
     }
 
     @Override

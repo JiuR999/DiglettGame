@@ -47,7 +47,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static final String USER_PASSWORD = "user_password";
 
 
-
     //登录成功消息类型
     private final int LOGIN_SUCCEED = 1;
     //账号未注册消息类型

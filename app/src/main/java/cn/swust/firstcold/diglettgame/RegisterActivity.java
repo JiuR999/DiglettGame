@@ -1,5 +1,6 @@
 package cn.swust.firstcold.diglettgame;
 
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -33,6 +34,8 @@ public class RegisterActivity extends AppCompatActivity {
     private boolean isExist = false;
     public static final int REGISTER_FAILED = 2;
     public static final int REGISTER_SUCCEED = 3;
+    public static final String USER_LEVEL = "user_level";
+
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(@NonNull Message msg) {
@@ -112,6 +115,11 @@ public class RegisterActivity extends AppCompatActivity {
                 String password = editTextPassword.getText().toString();
                 String repassword = editTextRePassword.getText().toString();
                 Register(name,account,password,repassword);
+                //初始化通关数
+                SharedPreferences sharedPreferences = getSharedPreferences(account,MODE_PRIVATE);
+                SharedPreferences.Editor editor =sharedPreferences.edit();
+                editor.putString(USER_LEVEL,"1");
+                editor.apply();
             }
         });
     }

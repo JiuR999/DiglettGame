@@ -1,6 +1,7 @@
 package cn.swust.firstcold.diglettgame;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,8 +12,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.DisplayMetrics;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -79,12 +82,20 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
     private int TIME_LIMIT = 10;
     //简单模式刷新时间
     private int TIME_RENEW = 900;
+    //当前游戏速度
+    //当前关卡目标通关分数
+    //private int targetScore = 30+(level -1)*5;
+    //通关状态，默认为false
+    private boolean levelPass;
     //记录用户目前游戏得分
     private int grade = 0;
     private int TARGETGRADE = 10;
     private static final int ACTION_PLAY_CHUI = 1;
     private static final int ACTION_PLAY_SHU = 2;
+    //通关结果弹窗
+    private Dialog dialog;
     //操作UI界面
+    public static final String USER_LEVEL = "user_level";
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(@NonNull Message msg) {
@@ -102,45 +113,9 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
                 if (msg.arg1==0){
                     isGameStart = false;
                     grade+=COMBO*2;
-
-                    if(grade>=TARGETGRADE){
-                        SharedPreferences sp = getSharedPreferences(CONFIG_NAME,CONFIG_MODE);
-                        SharedPreferences.Editor editor = sp.edit();
-                        editor.putBoolean(String.valueOf(level),true);
-                        editor.apply();
-                        new AlertDialog.Builder(MouseActivity.this).setMessage("您的得分是"+grade)
-                                .setTitle("恭喜通关！").setPositiveButton("下一关", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                reSetGame();
-
-                                level++;
-                                dialog.dismiss();
-                            }
-                        }).setNegativeButton("返回", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                reSetGame();
-                                dialog.dismiss();
-                            }
-                        }).show();
-                    }else{
-                        new AlertDialog.Builder(MouseActivity.this).setMessage("您的得分是"+grade+"离通关分数还差"+(TARGETGRADE-grade)+"分")
-                                .setTitle("还需要加油哟！").setPositiveButton("再试一次", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                reSetGame();
-                                dialog.dismiss();
-                            }
-                        }).setNegativeButton("返回", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                reSetGame();
-                                dialog.dismiss();
-                            }
-                        }).show();
-                    }
-
+                    if(grade >= TARGETGRADE) levelPass = true;
+                    else levelPass = false;
+                    levelResult(levelPass);
                 }
             }
         }
@@ -151,6 +126,9 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mouse);
+
+        account = getIntent().getStringExtra(MainActivity.ACCOUNT);
+
         initView();
         initLevel();
 
@@ -161,27 +139,31 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
     /**
      * 游戏结束后重置
      */
-    private void reSetGame() {
-        isGameStart = false;
-        TIME_LIMIT = 10;
-        imageBtnPlay.setImageResource(R.mipmap.btn_start);
-        grade+=COMBO*2;
-        loadConfig(level);
-        saveConfig(level);
-        grade = 0;
-        COMBO = 0;
-    }
+//    private void reSetGame() {
+//        isGameStart = false;
+//        TIME_LIMIT = 10;
+//        imageBtnPlay.setImageResource(R.mipmap.btn_start);
+//        grade+=COMBO*2;
+//        loadConfig(level);
+//        saveConfig(level);
+//        grade = 0;
+//        COMBO = 0;
+//    }
     private void initLevel() {
-        level = Integer.valueOf(getIntent().getStringExtra(LevelSelectionActivity.LEVEL))+1;
+//        level = Integer.valueOf(getIntent().getStringExtra(LevelSelectionActivity.LEVEL))+1;
+        SharedPreferences sp = getSharedPreferences(account,MODE_PRIVATE);
+        String strlevel = sp.getString(USER_LEVEL,"");
+        level = Integer.parseInt(strlevel);
         tv_level = findViewById(R.id.tv_level);
         tv_target = findViewById(R.id.tv_target);
         tv_level.setText("第"+level+"关");
 
-        TARGETGRADE = 10+(level-1)*2;
+        TARGETGRADE = 20+(level-1)*3;
         tv_target.setText(""+TARGETGRADE+"分");
         TIME_LIMIT = 60-level*5;
         TIME_RENEW = 900-(level-1)*50;
-        account = getIntent().getStringExtra(MainActivity.ACCOUNT);
+//        account = getIntent().getStringExtra(MainActivity.ACCOUNT);
+
     }
 
     /**
@@ -234,7 +216,7 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
                 isContinue[lcount] = 0;
                 handler.sendMessage(msg);
                 try {
-                    Thread.sleep(mode);
+                    Thread.sleep(TIME_RENEW);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -432,6 +414,7 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
                 break;
             case R.id.ib_return:
                 finish();
+                startActivity(new Intent(MouseActivity.this,LevelSelectionActivity.class));
                 break;
         }
     }
@@ -512,5 +495,79 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
             case 10: recordCount = sp.getString(SCORE10,"0");
                 break;
         }
+    }
+
+    /**
+     * 弹窗事件
+     * */
+    public void levelResult (boolean isPassed){
+        dialog = new Dialog(this);
+        LayoutInflater inflater = getLayoutInflater();
+        if(isPassed) {
+            View dialogView = inflater.inflate(R.layout.dialog_success, null);
+            dialog.setContentView(dialogView);
+            ImageView btnNext = dialogView.findViewById(R.id.imageNext);
+            ImageView btnReHome = dialogView.findViewById(R.id.imageReHome);
+
+            // 下一关
+            btnNext.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    SharedPreferences sp = getSharedPreferences(account,MODE_PRIVATE);
+                    String strlevel = sp.getString(USER_LEVEL,"");
+                    String resultlevel = String.valueOf(Integer.parseInt(strlevel) + 1);
+                    SharedPreferences.Editor editor = sp.edit();
+                    editor.putString("user_level",resultlevel);
+                    editor.apply();
+                    dialog.dismiss();
+                    Intent intent = getIntent();
+                    finish();
+                    startActivity(intent);
+                }
+            });
+
+            // 返回菜单
+            btnReHome.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    finish();
+                    dialog.dismiss();
+                    startActivity(new Intent(MouseActivity.this,LevelSelectionActivity.class));
+                }
+            });
+        } else {
+            View dialogView = inflater.inflate(R.layout.dialog_false, null);
+            dialog.setContentView(dialogView);
+
+            ImageView btnReHome2 = dialogView.findViewById(R.id.imageReHome2);
+            ImageView btnRe = dialogView.findViewById(R.id.imageRe);
+
+            // 重玩本关
+            btnRe.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dialog.dismiss();
+                    Intent intent = getIntent();
+                    finish();
+                    startActivity(intent);
+                }
+            });
+
+            // 返回菜单
+            btnReHome2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    finish();
+                    dialog.dismiss();
+                    startActivity(new Intent(MouseActivity.this,LevelSelectionActivity.class));
+                }
+            });
+        }
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        dialog.show();
+        Window window = dialog.getWindow();
+        int width = getResources().getDisplayMetrics().widthPixels;
+        int height = getResources().getDisplayMetrics().heightPixels;
+        window.setLayout(width-200,height*1/4);
     }
 }
