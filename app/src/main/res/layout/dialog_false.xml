@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/dia_background"
     android:orientation="vertical"
-    android:padding="16dp"
-    android:background="@drawable/bc_level">
+    android:padding="16dp">
 
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="75dp"
-        android:src="@drawable/fkg"/>
+        android:src="@drawable/fa5" />
 
     <TextView
         android:id="@+id/dialog_result"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="请继续努力！"
+        android:layout_marginTop="30dp"
         android:textAlignment="center"
         android:textColor="#253CC6"
         android:textSize="18sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/imageReHome2"
@@ -36,7 +36,7 @@
         <ImageView
             android:id="@+id/imageRe"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             app:srcCompat="@drawable/fa1" />
     </LinearLayout>
 
