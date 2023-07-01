@@ -31,6 +31,8 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
     private ImageButton imageBtnMusic,imageBtnPlay,imageBtnList,imageBtnEnd,imageButtonBack;
     //显示得分、当前剩余时间、关卡数，目标分
     private TextView tv_count,tv_curtime,tv_level,tv_target;
+    //获取字体文件
+    private  AssetManager assetManager ;
     //标志连击
     private int lcount = 0;
 
@@ -113,8 +115,8 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 reSetGame();
-
                                 level++;
+                                tv_level.setText(""+level);
                                 dialog.dismiss();
                             }
                         }).setNegativeButton("返回", new DialogInterface.OnClickListener() {
@@ -175,8 +177,8 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
         level = Integer.valueOf(getIntent().getStringExtra(LevelSelectionActivity.LEVEL))+1;
         tv_level = findViewById(R.id.tv_level);
         tv_target = findViewById(R.id.tv_target);
-        tv_level.setText("第"+level+"关");
-
+        tv_level.setText(""+level);
+        tv_level.setTypeface(Typeface.createFromAsset(assetManager,"fonts/FZKTPOP.TTF"));
         TARGETGRADE = 10+(level-1)*2;
         tv_target.setText(""+TARGETGRADE+"分");
         TIME_LIMIT = 60-level*5;
@@ -247,6 +249,7 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
      */
     private void initView() {
         initPosition();
+        assetManager = this.getAssets();
         tv_curtime = findViewById(R.id.tv_curtime);
         intentSound = new Intent(this,BcsoundService.class);
         progressBarTime = findViewById(R.id.pgb_time);
@@ -268,11 +271,9 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
         imageBtnEnd.setOnClickListener(this);
 
         tv_count = findViewById(R.id.tv_count);
-        tv_count.setBackgroundResource(R.drawable.score2);
         //设置字体
-        AssetManager assetManager = this.getAssets();
+        tv_count.setTypeface(Typeface.createFromAsset(assetManager,"fonts/ALGER.TTF"));
 
-        tv_count.setTypeface(Typeface.createFromAsset(assetManager,"fonts/FZYTK.TTF"));
         //设置用户点击老鼠后的响应事件
         imageViewMouse.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -300,8 +301,7 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
                     imageViewChui.setY(event.getRawY()-imageViewChui.getHeight()-70);
                     imageViewChui.setVisibility(View.VISIBLE);
                     playSound(ACTION_PLAY_CHUI);
-                    tv_count.setText("分数\n"+grade);
-                    //tv_count.setText("COMB x" + COMBO);
+                    tv_count.setText(" "+grade+"分");
                 }
                 //用户抬起手后，将锤子设置为不可见
                 else if(event.getAction()==MotionEvent.ACTION_UP) {
