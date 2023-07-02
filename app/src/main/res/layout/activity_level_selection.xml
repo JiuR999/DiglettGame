@@ -37,7 +37,7 @@
             android:id="@+id/imgMusic"
             android:layout_width="56dp"
             android:layout_height="82dp"
-            android:layout_marginLeft="253dp"
+            android:layout_marginLeft="250dp"
             app:srcCompat="@mipmap/music_on" />
     </LinearLayout>
 

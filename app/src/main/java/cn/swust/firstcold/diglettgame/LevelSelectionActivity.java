@@ -1,5 +1,6 @@
 package cn.swust.firstcold.diglettgame;
 
+import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -7,6 +8,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -29,6 +31,8 @@ public class LevelSelectionActivity extends AppCompatActivity {
     private String account;
     private ImageView imgMusic;
     private boolean isPlay = true;
+    private final int RESULTCODE = 10;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +43,13 @@ public class LevelSelectionActivity extends AppCompatActivity {
         //初始化关卡界面
         initRecycleView();
         startPlayBacMusic();
+    }
+
+    private void setObjAnimation(Object obj,String name,float one,float two,int repeat) {
+        ObjectAnimator objectAnimator= ObjectAnimator.ofFloat(obj,name,one,two);
+        objectAnimator.setDuration(2500);/*动画时间*/
+        objectAnimator.setRepeatCount(repeat);
+        objectAnimator.start();
     }
 
     /**
@@ -58,7 +69,7 @@ public class LevelSelectionActivity extends AppCompatActivity {
 
     private void initRecycleView() {
         imgMusic = findViewById(R.id.imgMusic);
-
+        setObjAnimation(imgMusic,"rotation",0f,365f,-1);
         // 设置布局管理器为网格布局管理器，每行显示五个关卡
         GridLayoutManager layoutManager = new GridLayoutManager(this, 4);
         recyclerView.setLayoutManager(layoutManager);
@@ -71,8 +82,8 @@ public class LevelSelectionActivity extends AppCompatActivity {
                 }else{
                     Intent intent = new Intent(LevelSelectionActivity.this, MouseActivity.class);
                     intent.putExtra(MainActivity.ACCOUNT,account);
-//                    intent.putExtra(LevelSelectionActivity.LEVEL,String.valueOf(position));
-                    startActivity(intent);
+                    intent.putExtra(LevelSelectionActivity.LEVEL,position+1);
+                    startActivityForResult(intent,RESULTCODE);
                 }
             }
         });
@@ -100,31 +111,42 @@ public class LevelSelectionActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==RESULTCODE){
+            if(resultCode == RESULT_OK){
+                account = data.getStringExtra(MainActivity.ACCOUNT);
+                //初始化关卡数据
+                intiData();
+                //初始化关卡界面
+                initRecycleView();
+            }
+        }
+    }
+
     protected void intiData(){
         levels = new ArrayList<>();
-//        SharedPreferences sp = getSharedPreferences(MouseActivity.CONFIG_NAME,MouseActivity.CONFIG_MODE);
         account = getIntent().getStringExtra(MainActivity.ACCOUNT);
         //获取用户关卡数
         SharedPreferences sp = getSharedPreferences(account,MODE_PRIVATE);
-        String strlevels = sp.getString("user_level","");
+        SharedPreferences.Editor editor = sp.edit();
+        String strlevels = sp.getString("user_level","1");
         int levelnum = Integer.parseInt(strlevels);
-        for (int i = 0; i < 10; i++){
-            String levelString = String.valueOf(i+1);
-            if(i < levelnum){
-                levels.add(new Level(levelString,false,sp.getBoolean(levelString,false)));
-            }else {
-                levels.add(new Level(levelString,!(sp.getBoolean(String.valueOf(i),false)),sp.getBoolean(levelString,false)));
+        for (int i = 1; i <= 10; i++){
+            if(levelnum==1){
+                if(i==1)levels.add(new Level(String.valueOf(i),false,sp.getBoolean(String.valueOf(i),false)));
+                else    levels.add(new Level(String.valueOf(i),!(sp.getBoolean(String.valueOf(i-1),false)),false));
+            }else{
+                if(i < levelnum){
+                    editor.putBoolean(String.valueOf(i),true);
+                    editor.apply();
+                    levels.add(new Level(String.valueOf(i),false,sp.getBoolean(String.valueOf(i),false)));
+                }else{
+                    levels.add(new Level(String.valueOf(i),!(sp.getBoolean(String.valueOf(i-1),false)),sp.getBoolean(String.valueOf(i),false)));
+                }
             }
         }
-//        for (int i = 0; i < 10; i++){
-//            String levelString = String.valueOf(i+1);
-//            if(i!=0){
-//                levels.add(new Level(levelString,!(sp.getBoolean(String.valueOf(i),false)),sp.getBoolean(levelString,false)));
-//            }else{
-//                //设置第一个关卡解锁状态
-//                levels.add(new Level(levelString,false,sp.getBoolean(levelString,false)));
-//            }
-//        }
     }
 
     @Override

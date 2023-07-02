@@ -1,5 +1,6 @@
 package cn.swust.firstcold.diglettgame;
 
+import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,7 +16,9 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
     private ImageView imageplay;
     private ProgressBar progressBarRun;
     private final int RUNMESSAGE = 1;
+    private ImageView imgMusic;
     private int progress = 0;
+    private boolean isPlay = true;
     private Handler runHandler = new Handler(){
         @Override
         public void handleMessage(@NonNull Message msg) {
@@ -60,6 +63,46 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
         imageplay = findViewById(R.id.imagePlay);
         imageplay.setOnClickListener(this);
         progressBarRun = findViewById(R.id.pgb_run);
+        imgMusic = findViewById(R.id.img_sp_music);
+        imgMusic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(isPlay){
+                    imgMusic.setImageResource(R.mipmap.music_off);
+                    isPlay = false;
+                    stopPlayBacMusic();
+                }else{
+                    imgMusic.setImageResource(R.mipmap.music_on);
+                    isPlay = true;
+                    startPlayBacMusic();
+                }
+            }
+        });
+        setObjAnimation(imgMusic,"rotation",0f,365f,-1);
+        setObjAnimation(imageplay,"scaleX",0.2f,1f,0);
+
+    }
+
+    private void setObjAnimation(Object obj,String name,float one,float two,int repeat) {
+        ObjectAnimator objectAnimator= ObjectAnimator.ofFloat(obj,name,one,two);
+        objectAnimator.setDuration(2500);/*动画时间*/
+        objectAnimator.setRepeatCount(repeat);
+        objectAnimator.start();
+    }
+
+    /**
+     * 播放音乐
+     */
+    private void startPlayBacMusic() {
+        Intent intent = new Intent(SplashActivity.this,BcmusicService.class);
+        startService(intent);
+    }
+    /**
+     * 停止播放音乐
+     */
+    private void stopPlayBacMusic() {
+        Intent intent = new Intent(SplashActivity.this,BcmusicService.class);
+        stopService(intent);
     }
 
     @Override

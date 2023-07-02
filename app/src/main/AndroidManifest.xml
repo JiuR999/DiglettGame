@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DiglettGame">
         <activity
+            android:name=".ForgetActivity"
+            android:exported="false" />
+        <activity
             android:name=".rankingListActivity"
             android:exported="false" />
 

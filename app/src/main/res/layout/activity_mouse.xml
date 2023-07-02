@@ -12,31 +12,32 @@
         android:id="@+id/liner_tv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center">
+        android:gravity="center"
+        android:orientation="vertical">
+
         <TextView
             android:id="@+id/tv_level"
             android:layout_width="80dp"
             android:layout_height="60dp"
             android:layout_centerHorizontal="true"
+            android:background="@drawable/level2"
             android:gravity="center"
-            android:layout_marginRight="10dp"
-            android:drawableLeft="@drawable/level3"
-            android:text="1"
-            android:textStyle="bold"
-            android:textColor="#FFFFAA"
-            android:textSize="25sp" />
+            android:paddingTop="23dp"
+            android:text="第1关"
+            android:textColor="@color/lblue"
+            android:textSize="25sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/tv_count"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:layout_centerHorizontal="true"
-            android:gravity="center"
-            android:textStyle="bold"
-            android:textColor="#F9F900"
             android:drawableLeft="@drawable/score"
-            android:textSize="25sp" />
+            android:gravity="center"
+            android:textColor="#F9F900"
+            android:textSize="25sp"
+            android:textStyle="bold" />
     </LinearLayout>
 
     <ProgressBar
@@ -44,7 +45,7 @@
         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
         android:layout_width="120dp"
         android:layout_height="20dp"
-        android:layout_below="@id/tv_curtime"
+        android:layout_below="@id/liner_time"
         android:layout_marginLeft="50dp"
         android:layout_marginTop="8dp"
         android:layout_toRightOf="@id/ib_list"
@@ -52,31 +53,39 @@
         android:progressDrawable="@drawable/progress"
         android:visibility="invisible" />
 
-    <TextView
-        android:id="@+id/tv_curtime"
+    <LinearLayout
+        android:id="@+id/liner_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/liner_tv"
-        android:layout_marginLeft="105dp"
-        android:layout_marginTop="15dp"
-        android:drawableLeft="@mipmap/time"
-        android:text="0秒"
-        android:textColor="@color/sandybrown"
-        android:textSize="25sp" />
+        android:layout_below="@id/liner_tv"
+        android:orientation="horizontal">
+        <ImageView
+            android:id="@+id/img_time"
+            android:layout_width="80dp"
+            android:layout_height="60dp"
+            android:src="@drawable/time"/>
+        <TextView
+            android:id="@+id/tv_curtime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text="0秒"
+            android:textColor="#FF0200"
+            android:textSize="25sp" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/tv_target"
         android:layout_width="wrap_content"
-        android:paddingLeft="20dp"
         android:layout_height="48dp"
         android:layout_below="@id/liner_tv"
         android:layout_alignParentRight="true"
         android:layout_marginTop="5dp"
-        android:layout_marginRight="55dp"
         android:background="@drawable/score1"
         android:gravity="center"
+        android:paddingLeft="20dp"
         android:text="25分"
-        android:textColor="@color/orange"
+        android:textColor="@color/btn"
         android:textSize="25sp" />
     <ImageButton
         android:id="@+id/ib_list"
@@ -86,10 +95,10 @@
         android:background="@null"
         android:src="@mipmap/list" />
 
-    <ImageButton
+    <ImageView
         android:id="@+id/ib_music"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="56dp"
+        android:layout_height="70dp"
         android:layout_alignParentRight="true"
         android:background="@null"
         android:paddingRight="8dp"
@@ -115,9 +124,9 @@
         android:gravity="center_horizontal"
         android:orientation="horizontal">
 
-        <ImageButton
+        <ImageView
             android:id="@+id/ib_play"
-            android:layout_width="80dp"
+            android:layout_width="60dp"
             android:layout_height="80dp"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
@@ -125,11 +134,12 @@
             android:background="@null"
             android:src="@mipmap/btn_start" />
 
-        <ImageButton
+        <ImageView
             android:id="@+id/ib_end"
-            android:layout_width="80dp"
+            android:layout_width="70dp"
             android:layout_height="80dp"
             android:layout_alignParentBottom="true"
+            android:layout_marginLeft="12dp"
             android:layout_marginBottom="70dp"
             android:layout_toRightOf="@id/ib_play"
             android:background="@null"
@@ -137,12 +147,13 @@
 
         <ImageButton
             android:id="@+id/ib_return"
-            android:layout_width="80dp"
+            android:layout_width="65dp"
             android:layout_height="80dp"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="70dp"
+            android:layout_marginLeft="10dp"
             android:layout_toRightOf="@id/ib_end"
             android:background="@null"
+            android:padding="12dp"
             android:src="@drawable/ic_fanhui" />
     </LinearLayout>
 </RelativeLayout>

@@ -32,7 +32,8 @@ import cn.swust.firstcold.roomdatabase.UserDataBase;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     public static final String ACCOUNT = "account";
-    private Button btnGame,btnLog;
+    private Button btnLog;
+    private TextView tv_forget;
     private CheckBox checkBox;
     private TextView tvRegister;
     private UserDataBase db;
@@ -125,6 +126,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
     private void InitView() {
         btnLog = findViewById(R.id.btn_log);
+        tv_forget = findViewById(R.id.tv_forget);
+        tv_forget.setOnClickListener(this);
         editTextUser = findViewById(R.id.edit_user);
         editTextPassword = findViewById(R.id.edit_password);
         btnLog.setOnClickListener(this);
@@ -149,7 +152,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     notRememberPassword();
                 }
                 break;
+            case R.id.tv_forget:
+                forgetPassword();
         }
+    }
+
+    private void forgetPassword() {
+        Intent intent = new Intent(MainActivity.this,ForgetActivity.class);
+        intent.putExtra(MainActivity.ACCOUNT,editTextUser.getText().toString());
+        startActivity(intent);
     }
 
     /**

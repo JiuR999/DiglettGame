@@ -63,7 +63,6 @@ public class rankingListActivity extends AppCompatActivity {
         list.add(new ListItem(imageView,"第八关最高分：", "8"));
         list.add(new ListItem(imageView,"第九关最高分：", "9"));
         list.add(new ListItem(imageView,"第十关最高分：", "10"));
-        list.add(new ListItem(imageView,"第十一关最高分：", "11"));
         ListItemAdapter adapter = new ListItemAdapter(
                 this, R.layout.activity_ranking_list_item,list);
         listView_HitMouse.setAdapter(adapter);
@@ -103,42 +102,55 @@ public class rankingListActivity extends AppCompatActivity {
             final TextView tvSubTitle = view.findViewById(R.id.tvSubTitle);// 排行榜每个List的副标题
 
             if (tvTitle == null || tvSubTitle == null) return null;
+            String account = getIntent().getStringExtra(MainActivity.ACCOUNT);
+            SharedPreferences sp = getSharedPreferences(account,MouseActivity.CONFIG_MODE);
+            if(position<list.size()){
+                final ListItem item = getItem(position); //得到每个位置的Item
+                imageView.setImageResource(images[position]); //为每个Item设置对应的图片
+                tvTitle.setText(item.title); // 为每个Item设置主标题
+                //根据位置为每个Item设置副标题
+                if (Objects.equals(item.subTitle, "1")) {
+                    tvSubTitle.setText(sp.getString(MouseActivity.SCORE1,"").equals("")?
+                            "您暂时还未解锁此关卡哦！":sp.getString(MouseActivity.SCORE1,"")+ "分");
+                }
+                if(Objects.equals(item.subTitle, "2")) {
+                    tvSubTitle.setText(sp.getString(MouseActivity.SCORE2,"").equals("")?
+                            "您暂时还未解锁此关卡哦！":sp.getString(MouseActivity.SCORE2,"")+ "分");
+                }
+                if(Objects.equals(item.subTitle, "3")) {
+                    tvSubTitle.setText(sp.getString(MouseActivity.SCORE3,"").equals("")?
+                            "您暂时还未解锁此关卡哦！":sp.getString(MouseActivity.SCORE3,"")+ "分");
+                }
+                if(Objects.equals(item.subTitle, "4")) {
+                    tvSubTitle.setText(sp.getString(MouseActivity.SCORE4,"").equals("")?
+                            "您暂时还未解锁此关卡哦！":sp.getString(MouseActivity.SCORE4,"")+ "分");
+                }
+                if(Objects.equals(item.subTitle, "5")) {
+                    tvSubTitle.setText(sp.getString(MouseActivity.SCORE5,"").equals("")?
+                            "您暂时还未解锁此关卡哦！":sp.getString(MouseActivity.SCORE5,"")+ "分");
+                }
+                if(Objects.equals(item.subTitle, "6")) {
+                    tvSubTitle.setText(sp.getString(MouseActivity.SCORE6,"").equals("")?
+                            "您暂时还未解锁此关卡哦！":sp.getString(MouseActivity.SCORE6,"")+ "分");
+                }
+                if(Objects.equals(item.subTitle, "7")) {
+                    tvSubTitle.setText(sp.getString(MouseActivity.SCORE7,"").equals("")?
+                            "您暂时还未解锁此关卡哦！":sp.getString(MouseActivity.SCORE7,"")+ "分");
+                }
+                if(Objects.equals(item.subTitle, "8")) {
+                    tvSubTitle.setText(sp.getString(MouseActivity.SCORE8,"").equals("")?
+                            "您暂时还未解锁此关卡哦！":sp.getString(MouseActivity.SCORE8,"")+ "分");
+                }
+                if(Objects.equals(item.subTitle, "9")) {
+                    tvSubTitle.setText(sp.getString(MouseActivity.SCORE9,"").equals("")?
+                            "您暂时还未解锁此关卡哦！":sp.getString(MouseActivity.SCORE9,"")+ "分");
+                }
+                if(Objects.equals(item.subTitle, "10")) {
+                    tvSubTitle.setText(sp.getString(MouseActivity.SCORE10,"").equals("")?
+                            "您暂时还未解锁此关卡哦！":sp.getString(MouseActivity.SCORE10,"")+ "分");
+                }
+            }
 
-            SharedPreferences sp = getSharedPreferences(MouseActivity.CONFIG_NAME,MouseActivity.CONFIG_MODE);
-            final ListItem item = getItem(position); //得到每个位置的Item
-            imageView.setImageResource(images[position]); //为每个Item设置对应的图片
-            tvTitle.setText(item.title); // 为每个Item设置主标题
-            //根据位置为每个Item设置副标题
-            if (Objects.equals(item.subTitle, "1")) {
-                tvSubTitle.setText(sp.getString(MouseActivity.SCORE1,"")+ "分");
-            }
-            if(Objects.equals(item.subTitle, "2")) {
-                tvSubTitle.setText(sp.getString(MouseActivity.SCORE2,"")+ "分");
-            }
-            if(Objects.equals(item.subTitle, "3")) {
-                tvSubTitle.setText(sp.getString(MouseActivity.SCORE3,"")+ "分");
-            }
-            if(Objects.equals(item.subTitle, "4")) {
-                tvSubTitle.setText(sp.getString(MouseActivity.SCORE4,"")+ "分");
-            }
-            if(Objects.equals(item.subTitle, "5")) {
-                tvSubTitle.setText(sp.getString(MouseActivity.SCORE5,"")+ "分");
-            }
-            if(Objects.equals(item.subTitle, "6")) {
-                tvSubTitle.setText(sp.getString(MouseActivity.SCORE6,"")+ "分");
-            }
-            if(Objects.equals(item.subTitle, "7")) {
-                tvSubTitle.setText(sp.getString(MouseActivity.SCORE7,"")+ "分");
-            }
-            if(Objects.equals(item.subTitle, "8")) {
-                tvSubTitle.setText(sp.getString(MouseActivity.SCORE8,"")+ "分");
-            }
-            if(Objects.equals(item.subTitle, "9")) {
-                tvSubTitle.setText(sp.getString(MouseActivity.SCORE9,"")+ "分");
-            }
-            if(Objects.equals(item.subTitle, "10")) {
-                tvSubTitle.setText(sp.getString(MouseActivity.SCORE10,"")+ "分");
-            }
             return view;
         }
     }
