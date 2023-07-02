@@ -89,6 +89,10 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
     private int TARGETGRADE = 10;
     private static final int ACTION_PLAY_CHUI = 1;
     private static final int ACTION_PLAY_SHU = 2;
+    private static final int ACTION_PLAY_VICTORY = 3;
+    private static final int ACTION_PLAY_FALSE = 4;
+    private static final int ACTION_PLAY_CLICK = 5;
+
     //设置字体
     private AssetManager assetManager;
     //通关结果弹窗
@@ -382,6 +386,7 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.ib_play:
+                playSound(ACTION_PLAY_CLICK);
                 if(isGameStart){
                     imageViewTime.clearAnimation();
                     imageBtnPlay.setImageResource(R.mipmap.btn_start);
@@ -408,6 +413,7 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
                 }
                 break;
             case R.id.ib_music:
+                playSound(ACTION_PLAY_CLICK);
                 if(SplashActivity.isPlay){
                     imageBtnMusic.setImageResource(R.mipmap.music_off);
                     SplashActivity.isPlay = false;
@@ -419,6 +425,7 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
                 }
                 break;
             case R.id.ib_end:
+                playSound(ACTION_PLAY_CLICK);
                 isGameStart = false;
                 imageBtnPlay.setImageResource(R.mipmap.btn_start);
                 objectAnimator.end();
@@ -426,6 +433,7 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
                 setEndGame();
                 break;
             case R.id.ib_list:
+                playSound(ACTION_PLAY_CLICK);
                 loadConfig(level);//先读取一次排行榜中已经存储的内容
                 saveConfig(level);  //若没进行游戏，则显示历史保存的记录。若进行了游戏，则保存最新游戏的记录
                 Intent intent = new Intent(MouseActivity.this, rankingListActivity.class);
@@ -433,6 +441,7 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
                 startActivity(intent);
                 break;
             case R.id.ib_return:
+                playSound(ACTION_PLAY_CLICK);
                 saveConfig(level);
                 back();
                 finish();
@@ -584,6 +593,7 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
         LayoutInflater inflater = getLayoutInflater();
         saveConfig(level);
         if(isPassed) {
+            playSound(ACTION_PLAY_VICTORY);
             level++;
             SharedPreferences sp = getSharedPreferences(account,MODE_PRIVATE);
             String strlevel = sp.getString(USER_LEVEL,"1");
@@ -603,7 +613,7 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
             btnNext.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
+                    playSound(ACTION_PLAY_CLICK);
                     dialog.dismiss();
                     Intent intent = getIntent();
                     intent.putExtra(LevelSelectionActivity.LEVEL,level);
@@ -616,12 +626,14 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
             btnReHome.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    playSound(ACTION_PLAY_CLICK);
                     back();
                     finish();
                     dialog.dismiss();
                 }
             });
         } else {
+            playSound(ACTION_PLAY_FALSE);
             View dialogView = inflater.inflate(R.layout.dialog_false, null);
             dialog.setContentView(dialogView);
 
@@ -632,6 +644,7 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
             btnRe.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    playSound(ACTION_PLAY_CLICK);
                     dialog.dismiss();
                     Intent intent = getIntent();
                     finish();
@@ -643,6 +656,7 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
             btnReHome2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    playSound(ACTION_PLAY_CLICK);
                     back();
                     finish();
                     dialog.dismiss();

@@ -19,6 +19,7 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
     private ImageView imgMusic;
     private int progress = 0;
     public static boolean isPlay = true;
+
     private Handler runHandler = new Handler(){
         @Override
         public void handleMessage(@NonNull Message msg) {
