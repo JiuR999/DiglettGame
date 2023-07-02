@@ -21,6 +21,7 @@ public class BcmusicService extends Service {
     public void onCreate() {
         mediaPlayer = MediaPlayer.create(this,R.raw.ylgy);
         mediaPlayer.setLooping(true);
+        mediaPlayer.setVolume(0.2f,0.2f);
     }
 
     @Override

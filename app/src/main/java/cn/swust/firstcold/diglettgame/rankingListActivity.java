@@ -50,6 +50,14 @@ public class rankingListActivity extends AppCompatActivity {
 
         listView_HitMouse = findViewById(R.id.listView_HitMouse);//绑定排行榜的ListView
         imageView = findViewById(R.id.item_view);
+        ImageView imageReturn = findViewById(R.id.imageRankRe);
+        imageReturn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
         SharedPreferences sp = getSharedPreferences(MouseActivity.CONFIG_NAME,MouseActivity.CONFIG_MODE);
 
         list = new ArrayList<ListItem>();//将每个Item加入到list列表中
@@ -78,9 +86,9 @@ public class rankingListActivity extends AppCompatActivity {
     }
 
     public class ListItemAdapter extends ArrayAdapter<ListItem>{
-        private int[] images = {R.drawable.chuizi,R.drawable.chuizi,R.drawable.chuizi,R.drawable.chuizi,
-                R.drawable.chuizi,R.drawable.chuizi,R.drawable.chuizi,R.drawable.chuizi
-                ,R.drawable.chuizi,R.drawable.chuizi};
+        private int[] images = {R.drawable.p1,R.drawable.p2,R.drawable.p3,R.drawable.p4,
+                R.drawable.p5,R.drawable.p6,R.drawable.p7,R.drawable.p8
+                ,R.drawable.p9,R.drawable.p10};
         // 将排行榜里每个Item要插入的图片加入一个数组
         //用于存储每个ListView的图片，并方便使用
         public ListItemAdapter(@NonNull Context context, int resource, @NonNull List objects) {
