@@ -1,7 +1,6 @@
 package cn.swust.firstcold.diglettgame;
 
 import android.animation.ObjectAnimator;
-import android.app.Service;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -112,6 +111,9 @@ public class LevelSelectionActivity extends AppCompatActivity {
         imgReturn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intentSound = new Intent(LevelSelectionActivity.this,BcsoundService.class);
+                intentSound.putExtra("打地鼠界面",5);
+                startService(intentSound);
                    finish();
             }
         });

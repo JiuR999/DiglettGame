@@ -109,6 +109,9 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onClick(View v) {
         if(v.getId()==R.id.imagePlay){
+            Intent intentSound = new Intent(SplashActivity.this,BcsoundService.class);
+            intentSound.putExtra("打地鼠界面",5);
+            startService(intentSound);
             startActivity(new Intent(SplashActivity.this, MainActivity.class));
         }
     }

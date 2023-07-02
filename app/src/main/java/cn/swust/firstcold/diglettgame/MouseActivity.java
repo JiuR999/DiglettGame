@@ -147,7 +147,7 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
         tv_count.setTypeface(Typeface.createFromAsset(assetManager,"fonts/FZYTK.TTF"));
         tv_level.setTypeface(Typeface.createFromAsset(assetManager,"fonts/FZKTPOP.TTF"));
         tv_target.setTypeface(Typeface.createFromAsset(assetManager,"fonts/ALGER.TTF"));
-        tv_curtime.setTypeface(Typeface.createFromAsset(assetManager,"fonts/KT.otf"));
+        tv_curtime.setTypeface(Typeface.createFromAsset(assetManager,"fonts/ARLRDBD.TTF"));
     }
 
     private void initLevel() {
@@ -365,7 +365,6 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
         }
         return super.onTouchEvent(event);
     }
-
     /**
      * 播放音乐
      */

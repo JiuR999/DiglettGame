@@ -43,7 +43,7 @@ public class BcsoundService extends Service {
         }
         if(intent != null && intent.hasExtra("点击")){
             int action = intent.getIntExtra("点击",-1);
-            soundPool.play(soundMap.get(action),2,2,1,0,1);
+            soundPool.play(soundMap.get(action),4,4,1,0,1);
         }
             return super.onStartCommand(intent, flags, startId);
     }
