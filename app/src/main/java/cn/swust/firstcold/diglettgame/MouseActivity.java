@@ -67,26 +67,20 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
     private ProgressBar progressBarTime;
     private float[][] position;
     private boolean isGameStart = false;
-    private boolean isMusicStart = false;
     private int[] isContinue = {0,0,0,0,0};
     //记录连击数量
     private int COMBO = 0;
     private Intent intentSound ;
-    //private final Intent intentMusic = new Intent(MouseActivity.this, BcmusicService.class);
     private final int MAX_CLICK = 5;
     //传递地鼠位置消息类型
     private final int MOUSE_POZITION = 1;
     //传递计时器消息类型
     private final int TIME = 2;
-
     private final int PROGRESS = 3;
     //简单模式时间限制
     private int TIME_LIMIT;
     //简单模式刷新时间
     private int TIME_RENEW = 900;
-    //当前游戏速度
-    //当前关卡目标通关分数
-    //private int targetScore = 30+(level -1)*5;
     //通关状态，默认为false
     private boolean levelPass;
     private boolean isAnimStart = false;
@@ -109,7 +103,9 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
                 imageViewMouse.setVisibility(View.VISIBLE);
                 imageViewMouse.setX(position[msg.arg1][0]);
                 imageViewMouse.setY(position[msg.arg1][1]);
-                playSound(ACTION_PLAY_SHU);
+                if(SplashActivity.isPlay){
+                    playSound(ACTION_PLAY_SHU);
+                }
             }else if (msg.what==TIME){
                 TIME_LIMIT = msg.arg1;
                 progressBarTime.setProgress(msg.arg1);
@@ -137,7 +133,6 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
         initLevel();
         initView();
         setFont();
-        //  Toast.makeText(this, "高dp："+heightDp+"\n"+"宽DP"+widthDp, Toast.LENGTH_SHORT).show();
 
     }
 
@@ -239,6 +234,9 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
         imageButtonBack = findViewById(R.id.ib_return);
         imageButtonBack.setOnClickListener(this);
         imageBtnMusic = findViewById(R.id.ib_music);
+        if (!SplashActivity.isPlay){
+            imageBtnMusic.setImageResource(R.mipmap.music_off);
+        }
         imageBtnMusic.setOnClickListener(this);
         setObjAnimation(imageBtnMusic,"rotation",0f,365f,-1);
 
@@ -280,7 +278,9 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
                     imageViewChui.setX(event.getRawX()-imageViewChui.getWidth()/2);
                     imageViewChui.setY(event.getRawY()-imageViewChui.getHeight()-70);
                     imageViewChui.setVisibility(View.VISIBLE);
-                    playSound(ACTION_PLAY_CHUI);
+                    if(SplashActivity.isPlay){
+                        playSound(ACTION_PLAY_CHUI);
+                    }
                     tv_count.setText(" "+grade+"分");
                 }
                 //用户抬起手后，将锤子设置为不可见
@@ -408,13 +408,13 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
                 }
                 break;
             case R.id.ib_music:
-                if(isMusicStart){
+                if(SplashActivity.isPlay){
                     imageBtnMusic.setImageResource(R.mipmap.music_off);
-                    isMusicStart = false;
+                    SplashActivity.isPlay = false;
                     stopPlayBacMusic();
                 }else{
                     imageBtnMusic.setImageResource(R.mipmap.music_on);
-                    isMusicStart  =true;
+                    SplashActivity.isPlay = true;
                     startPlayBacMusic();
                 }
                 break;

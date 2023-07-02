@@ -42,7 +42,9 @@ public class LevelSelectionActivity extends AppCompatActivity {
         intiData();
         //初始化关卡界面
         initRecycleView();
-        startPlayBacMusic();
+        if(SplashActivity.isPlay){
+            startPlayBacMusic();
+        }
     }
 
     private void setObjAnimation(Object obj,String name,float one,float two,int repeat) {
@@ -69,6 +71,9 @@ public class LevelSelectionActivity extends AppCompatActivity {
 
     private void initRecycleView() {
         imgMusic = findViewById(R.id.imgMusic);
+        if (!SplashActivity.isPlay){
+            imgMusic.setImageResource(R.mipmap.music_off);
+        }
         setObjAnimation(imgMusic,"rotation",0f,365f,-1);
         // 设置布局管理器为网格布局管理器，每行显示五个关卡
         GridLayoutManager layoutManager = new GridLayoutManager(this, 4);
@@ -91,13 +96,13 @@ public class LevelSelectionActivity extends AppCompatActivity {
         imgMusic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(isPlay){
+                if(SplashActivity.isPlay){
                     imgMusic.setImageResource(R.mipmap.music_off);
-                    isPlay = false;
+                    SplashActivity.isPlay = false;
                     stopPlayBacMusic();
                 }else{
                     imgMusic.setImageResource(R.mipmap.music_on);
-                    isPlay = true;
+                    SplashActivity.isPlay = true;
                     startPlayBacMusic();
                 }
             }
