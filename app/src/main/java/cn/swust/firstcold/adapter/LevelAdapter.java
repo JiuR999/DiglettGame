@@ -17,7 +17,7 @@ import cn.swust.firstcold.source.Level;
 public class LevelAdapter extends RecyclerView.Adapter<LevelAdapter.LevelViewHolder>{
     private List<Level> levels;
     private OnItemClickListener mListener;
-
+    //测试
     public void setOnItemClickListener(OnItemClickListener listener) {
         mListener = listener;
     }
