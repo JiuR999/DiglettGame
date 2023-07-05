@@ -3,51 +3,63 @@ package cn.swust.firstcold.diglettgame;
 import android.app.Service;
 import android.content.Intent;
 import android.media.MediaPlayer;
+import android.os.Binder;
 import android.os.IBinder;
 
 /**
  * @author 徐玉婷
  */
 public class BcmusicService extends Service {
-    public BcmusicService() {
-    }
-    public static MediaPlayer mediaPlayer;
+
+    public static MediaPlayer mediaPlayer = new MediaPlayer();
+    public IBinder iBinder = new MusicControlBinder();
     //记录音乐播放状态
-    static boolean isPlayer;
+    static boolean isPlayer = true;
+    @Override
+    public IBinder onBind(Intent intent) {
+        // TODO: Return the communication channel to the service.
+        return iBinder;
+    }
+    public BcmusicService(){
 
-
-
+    }
     @Override
     public void onCreate() {
         mediaPlayer = MediaPlayer.create(this,R.raw.ylgy);
-        mediaPlayer.setLooping(true);
-        mediaPlayer.setVolume(0.1f,0.1f);
+        super.onCreate();
+
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if(!mediaPlayer.isPlaying()){
-            mediaPlayer.start();
-            isPlayer = mediaPlayer.isPlaying();
-        }
+       // mediaPlayer.start();
         return super.onStartCommand(intent, flags, startId);
     }
 
     @Override
-    public IBinder onBind(Intent intent) {
-        // TODO: Return the communication channel to the service.
-        throw new UnsupportedOperationException("Not yet implemented");
+    public void onDestroy() {
+       if(mediaPlayer==null) return;
+       if(isPlayer){
+           mediaPlayer.stop();
+       }
+       mediaPlayer.release();
+       isPlayer = false;
+       mediaPlayer = null;
+    }
+    public void play(){
+        isPlayer = true;
+        mediaPlayer.start();
+    }
+    public void pauseMusic(){
+        mediaPlayer.pause();
+    }
+    public void continueMusic(){
+        mediaPlayer.start();
+    }
+    public class MusicControlBinder extends Binder {
+                BcmusicService getService(){
+                    return BcmusicService.this;
+                }
     }
 
-    @Override
-    public void onDestroy() {
-        mediaPlayer.stop();
-        isPlayer = mediaPlayer.isPlaying();
-        mediaPlayer.release();
-        super.onDestroy();
-    }
-    //关闭音量
-    public static void shutMusic(){
-        mediaPlayer.setVolume(0,0);
-    }
 }

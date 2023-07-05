@@ -416,11 +416,13 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
                 if(SplashActivity.isPlay){
                     imageBtnMusic.setImageResource(R.mipmap.music_off);
                     SplashActivity.isPlay = false;
-                    stopPlayBacMusic();
+                    SplashActivity.bcmusicService.pauseMusic();
+                    //stopPlayBacMusic();
                 }else{
                     imageBtnMusic.setImageResource(R.mipmap.music_on);
                     SplashActivity.isPlay = true;
-                    startPlayBacMusic();
+                    SplashActivity.bcmusicService.play();
+                    //startPlayBacMusic();
                 }
                 break;
             case R.id.ib_end:

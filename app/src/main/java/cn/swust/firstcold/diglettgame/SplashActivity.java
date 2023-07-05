@@ -1,9 +1,13 @@
 package cn.swust.firstcold.diglettgame;
 
 import android.animation.ObjectAnimator;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Message;
 import android.view.View;
 import android.widget.ImageView;
@@ -19,7 +23,20 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
     private ImageView imgMusic;
     private int progress = 0;
     public static boolean isPlay = true;
+    public static BcmusicService bcmusicService;
+    public BcmusicService.MusicControlBinder musicControl;
+    private ServiceConnection serviceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            bcmusicService = ((BcmusicService.MusicControlBinder)service).getService();
+            bcmusicService.play();
+        }
 
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+
+        }
+    };
     private Handler runHandler = new Handler(){
         @Override
         public void handleMessage(@NonNull Message msg) {
@@ -37,9 +54,19 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         InitView();
+        bcmusicService = new BcmusicService();
+        bindServiceConnection();
+        bcmusicService.play();
         runProgressBar();
-        startService(new Intent(SplashActivity.this,BcmusicService.class));
+        //startService(new Intent(SplashActivity.this,BcmusicService.class));
     }
+
+    private void bindServiceConnection() {
+        Intent intent = new Intent(SplashActivity.this,BcmusicService.class);
+        startService(intent);
+        bindService(intent,serviceConnection, Context.BIND_AUTO_CREATE);
+    }
+
     private void runProgressBar() {
         new Thread(new Runnable() {
             @Override
@@ -71,11 +98,13 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
                 if(isPlay){
                     imgMusic.setImageResource(R.mipmap.music_off);
                     isPlay = false;
-                    stopPlayBacMusic();
+                    bcmusicService.pauseMusic();
+                    //stopPlayBacMusic();
                 }else{
                     imgMusic.setImageResource(R.mipmap.music_on);
                     isPlay = true;
-                    startPlayBacMusic();
+                    bcmusicService.play();
+                    //startPlayBacMusic();
                 }
             }
         });
@@ -91,10 +120,12 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
         objectAnimator.start();
     }
 
+
     /**
      * 播放音乐
      */
     private void startPlayBacMusic() {
+
         Intent intent = new Intent(SplashActivity.this,BcmusicService.class);
         startService(intent);
     }

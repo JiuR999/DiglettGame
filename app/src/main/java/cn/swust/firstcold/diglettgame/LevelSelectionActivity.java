@@ -99,11 +99,13 @@ public class LevelSelectionActivity extends AppCompatActivity {
                 if(SplashActivity.isPlay){
                     imgMusic.setImageResource(R.mipmap.music_off);
                     SplashActivity.isPlay = false;
-                    stopPlayBacMusic();
+                    SplashActivity.bcmusicService.pauseMusic();
+                    //stopPlayBacMusic();
                 }else{
                     imgMusic.setImageResource(R.mipmap.music_on);
                     SplashActivity.isPlay = true;
-                    startPlayBacMusic();
+                    SplashActivity.bcmusicService.play();
+                   // startPlayBacMusic();
                 }
             }
         });

@@ -89,6 +89,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         InitView();
         showAccount();//显示账号，密码信息
     }
+
+
     private void setDialog(String tip,int command) {
         Dialog dialog = new Dialog(MainActivity.this);
         View view = View.inflate(MainActivity.this,R.layout.dialog,null);
@@ -242,5 +244,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         spannableString.setSpan(new ForegroundColorSpan(Color.GREEN), 6, 11, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
         return spannableString;
     }
+
 
 }
