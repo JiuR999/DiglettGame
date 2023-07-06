@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -40,7 +41,7 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
 
     private ObjectAnimator objectAnimator;
 
-
+    private int actionBarHeight = 0;
     public static final String CONFIG_NAME = "user_config";
     public static final int CONFIG_MODE = Context.MODE_PRIVATE;
 
@@ -65,7 +66,7 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
     //当前账户
     private String account;
     private ProgressBar progressBarTime;
-    private float[][] position;
+    private float[][] position = new float[9][2];
     private boolean isGameStart = false;
     private int[] isContinue = {0,0,0,0,0};
     //记录连击数量
@@ -92,7 +93,7 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
     private static final int ACTION_PLAY_VICTORY = 3;
     private static final int ACTION_PLAY_FALSE = 4;
     private static final int ACTION_PLAY_CLICK = 5;
-
+    private ImageView img1,img2,img3,img4,img5,img6,img7,img8,img9;
     //设置字体
     private AssetManager assetManager;
     //通关结果弹窗
@@ -105,8 +106,12 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
             super.handleMessage(msg);
             if (msg.what == MOUSE_POZITION){
                 imageViewMouse.setVisibility(View.VISIBLE);
-                imageViewMouse.setX(position[msg.arg1][0]);
-                imageViewMouse.setY(position[msg.arg1][1]);
+                imageViewMouse.setX(position[msg.arg1][0]-imageViewMouse.getWidth()/2);
+                imageViewMouse.setY(position[msg.arg1][1]-imageViewMouse.getHeight());
+
+                imageViewMouse.bringToFront();
+
+
                 if(SplashActivity.isPlay){
                     playSound(ACTION_PLAY_SHU);
                 }
@@ -134,10 +139,43 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
 
         account = getIntent().getStringExtra(MainActivity.ACCOUNT);
 
+
+
         initLevel();
         initView();
-        setFont();
 
+        setFont();
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+
+        setPosition(img1,0);
+        setPosition(img2,1);
+        setPosition(img3,2);
+        setPosition(img4,3);
+        setPosition(img5,4);
+        setPosition(img6,5);
+        setPosition(img7,6);
+        setPosition(img8,7);
+        setPosition(img9,8);
+    }
+
+    private void setPosition(ImageView img,int index) {
+        TypedValue tv = new TypedValue();
+
+        if (getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
+            actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data, getResources().getDisplayMetrics());
+        }
+        //24,624
+        int STATUS_BAR_HEIGHT = getStatusBarHeight(this);
+        int[] location = new int[2];
+       img.getLocationOnScreen(location);
+        float x = location[0];
+        float y = location[1];
+        this.position[index][0] = (float) x+img.getWidth()/2;
+        this.position[index][1] = (float) (y-STATUS_BAR_HEIGHT*0.6-actionBarHeight+img.getHeight()/2);
     }
 
     /**
@@ -234,6 +272,7 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
         progressBarTime.setMax(TIME_LIMIT);
 
         imageViewMouse = findViewById(R.id.iv_mouse);
+
         imageViewChui = findViewById(R.id.iv_chuizi);
         imageButtonBack = findViewById(R.id.ib_return);
         imageButtonBack.setOnClickListener(this);
@@ -253,7 +292,16 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
         imageBtnEnd.setOnClickListener(this);
 
         tv_count = findViewById(R.id.tv_count);
-            
+        //洞口
+        img1 = findViewById(R.id.gimg1);
+        img2 = findViewById(R.id.gimg2);
+        img3 = findViewById(R.id.gimg3);
+        img4 = findViewById(R.id.gimg4);
+        img5 = findViewById(R.id.gimg5);
+        img6 = findViewById(R.id.gimg6);
+        img7 = findViewById(R.id.gimg7);
+        img8 = findViewById(R.id.gimg8);
+        img9 = findViewById(R.id.gimg9);
         imageViewTime = findViewById(R.id.img_time);
         timerAnim();
         //设置用户点击老鼠后的响应事件
@@ -343,10 +391,10 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
         float heightDp = heightPx / density;
         float widthDp = widthPx / density;
         int STATUS_BAR_HEIGHT = getStatusBarHeight(this);
-        position = new float[][]{{60 * widthDp / 392, (float) (630 * heightDp / 830+STATUS_BAR_HEIGHT)}, {425 * widthDp / 392, (float) (630 * heightDp / 830+STATUS_BAR_HEIGHT)}, {780*widthDp/392, (float) (625 * heightDp / 830+STATUS_BAR_HEIGHT)},
-                {45 * widthDp / 392, (float) (1015 * heightDp / 830+STATUS_BAR_HEIGHT*1.5)}, {425 * widthDp / 392, (float) (1015 * heightDp / 830+STATUS_BAR_HEIGHT*1.5)}, {780*widthDp/392, (float) (1015 * heightDp / 830+STATUS_BAR_HEIGHT*1.5)},
-                {45 * widthDp / 392, (float) (1435 * heightDp / 830+STATUS_BAR_HEIGHT*1.5)}, {415 * widthDp / 392, (float) (1435 * heightDp / 830+STATUS_BAR_HEIGHT*1.5)}, {780*widthDp/392, (float) (1435 * heightDp / 830+STATUS_BAR_HEIGHT*1.5)}};
-    }
+//        position = new float[][]{{60 * widthDp / 392, (float) (630 * heightDp / 830+STATUS_BAR_HEIGHT)}, {425 * widthDp / 392, (float) (630 * heightDp / 830+STATUS_BAR_HEIGHT)}, {780*widthDp/392, (float) (625 * heightDp / 830+STATUS_BAR_HEIGHT)},
+//                {45 * widthDp / 392, (float) (1015 * heightDp / 830+STATUS_BAR_HEIGHT*1.5)}, {425 * widthDp / 392, (float) (1015 * heightDp / 830+STATUS_BAR_HEIGHT*1.5)}, {780*widthDp/392, (float) (1015 * heightDp / 830+STATUS_BAR_HEIGHT*1.5)},
+//                {45 * widthDp / 392, (float) (1435 * heightDp / 830+STATUS_BAR_HEIGHT*1.5)}, {415 * widthDp / 392, (float) (1435 * heightDp / 830+STATUS_BAR_HEIGHT*1.5)}, {780*widthDp/392, (float) (1435 * heightDp / 830+STATUS_BAR_HEIGHT*1.5)}};
+   }
 
     /*
        设计监听屏幕触摸事件，用于显示锤子
@@ -356,8 +404,9 @@ public class MouseActivity extends AppCompatActivity implements View.OnClickList
         switch (event.getAction()){
             case MotionEvent.ACTION_DOWN:
                 imageViewChui.setX(event.getRawX()-imageViewChui.getWidth()/2);
-                imageViewChui.setY(event.getRawY()-imageViewChui.getHeight()/3);
+                imageViewChui.setY(event.getRawY()-imageViewChui.getHeight()/2-actionBarHeight);
                 imageViewChui.setVisibility(View.VISIBLE);
+                imageViewChui.bringToFront();
                 break;
             case MotionEvent.ACTION_UP:
                 imageViewChui.setVisibility(View.INVISIBLE);

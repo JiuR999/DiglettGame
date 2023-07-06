@@ -109,8 +109,7 @@ public class SplashActivity extends AppCompatActivity implements View.OnClickLis
             }
         });
         setObjAnimation(imgMusic,"rotation",0f,365f,-1);
-        setObjAnimation(imageplay,"scaleX",0.2f,1f,0);
-
+        setObjAnimation(imageplay,"scaleX",0.2f,1f,-1);
     }
 
     private void setObjAnimation(Object obj,String name,float one,float two,int repeat) {

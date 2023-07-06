@@ -24,18 +24,21 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="horizontal"
         android:gravity="center_horizontal">
 
         <ImageView
             android:id="@+id/imageReHome"
-            android:layout_width="160dp"
+            android:layout_width="155dp"
             android:layout_height="55dp"
+            android:paddingTop="5dp"
             app:srcCompat="@drawable/re2" />
 
         <ImageView
             android:id="@+id/imageNext"
-            android:layout_width="160dp"
-            android:layout_height="55dp"
+            android:layout_width="153dp"
+            android:layout_height="53dp"
+            android:paddingTop="4dp"
             app:srcCompat="@drawable/next1" />
     </LinearLayout>
 

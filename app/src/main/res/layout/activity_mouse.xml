@@ -4,10 +4,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bc_mouse"
+    android:id="@+id/liner_mouse"
+    android:background="@drawable/bc_mouse2"
     android:padding="10dp"
     tools:context=".MouseActivity">
-
+    <ImageView
+        android:id="@+id/iv_mouse"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_row="0"
+        android:layout_column="1"
+        android:src="@drawable/dishu"
+        android:visibility="invisible" />
+    <ImageView
+        android:id="@+id/iv_chuizi"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:src="@drawable/chuizi"
+        android:visibility="invisible" />
     <LinearLayout
         android:id="@+id/liner_tv"
         android:layout_width="match_parent"
@@ -45,13 +59,14 @@
         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
         android:layout_width="120dp"
         android:layout_height="20dp"
-        android:layout_below="@id/liner_time"
-        android:layout_marginLeft="50dp"
-        android:layout_marginTop="8dp"
+        android:layout_below="@id/liner_tv"
+        android:layout_marginLeft="59dp"
+        android:layout_marginTop="25dp"
         android:layout_toRightOf="@id/ib_list"
         android:max="120"
         android:progressDrawable="@drawable/progress"
         android:visibility="invisible" />
+
 
     <LinearLayout
         android:id="@+id/liner_time"
@@ -103,19 +118,95 @@
         android:background="@null"
         android:paddingRight="8dp"
         android:src="@mipmap/music_on" />
-    <ImageView
-        android:id="@+id/iv_mouse"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:src="@drawable/dishu"
-        android:visibility="invisible"/>
 
     <ImageView
-        android:id="@+id/iv_chuizi"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:src="@drawable/chuizi"
-        android:visibility="invisible" />
+        android:id="@+id/gimg1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/liner_time"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="90dp"
+        android:src="@drawable/hole" />
+
+    <ImageView
+        android:id="@+id/gimg2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/liner_time"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="90dp"
+        android:layout_toRightOf="@id/gimg1"
+        android:src="@drawable/hole" />
+
+    <ImageView
+        android:id="@+id/gimg3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/liner_time"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="90dp"
+        android:layout_toRightOf="@id/gimg2"
+        android:src="@drawable/hole" />
+
+
+    <ImageView
+        android:id="@+id/gimg4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/gimg1"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="90dp"
+        android:src="@drawable/hole" />
+
+    <ImageView
+        android:id="@+id/gimg5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/gimg2"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="90dp"
+        android:layout_toRightOf="@id/gimg4"
+        android:src="@drawable/hole" />
+
+    <ImageView
+        android:id="@+id/gimg6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/gimg3"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="90dp"
+        android:layout_toRightOf="@id/gimg5"
+        android:src="@drawable/hole" />
+
+
+    <ImageView
+        android:id="@+id/gimg7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/gimg4"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="90dp"
+        android:src="@drawable/hole" />
+
+    <ImageView
+        android:id="@+id/gimg8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/gimg5"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="90dp"
+        android:layout_toRightOf="@id/gimg7"
+        android:src="@drawable/hole" />
+
+    <ImageView
+        android:id="@+id/gimg9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/gimg6"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="90dp"
+        android:layout_toRightOf="@id/gimg8"
+        android:src="@drawable/hole" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -127,9 +218,11 @@
         <ImageView
             android:id="@+id/ib_play"
             android:layout_width="60dp"
-            android:layout_height="80dp"
+            android:layout_height="70dp"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
             android:layout_marginBottom="70dp"
             android:background="@null"
             android:src="@mipmap/btn_start" />
@@ -139,7 +232,8 @@
             android:layout_width="70dp"
             android:layout_height="80dp"
             android:layout_alignParentBottom="true"
-            android:layout_marginLeft="12dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
             android:layout_marginBottom="70dp"
             android:layout_toRightOf="@id/ib_play"
             android:background="@null"
@@ -150,10 +244,11 @@
             android:layout_width="65dp"
             android:layout_height="80dp"
             android:layout_alignParentBottom="true"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="12dp"
             android:layout_toRightOf="@id/ib_end"
             android:background="@null"
             android:padding="12dp"
+            android:layout_marginTop="5dp"
             android:src="@drawable/ic_fanhui" />
     </LinearLayout>
 </RelativeLayout>
